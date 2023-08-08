@@ -1,2 +1,5 @@
 build/*
-!build/Emscripten/
+!build/Emscripten/*.data
+!build/Emscripten/*.html
+!build/Emscripten/*.js
+!build/Emscripten/*.wasm
