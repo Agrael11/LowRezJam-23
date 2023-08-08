@@ -1,0 +1,108 @@
+{
+    "version": 2,
+    "configurePresets": [
+        {
+            "name": "Win64",
+            "displayName": "Visual Studio Community 2022 Release - amd64",
+            "description": "Using compilers for Visual Studio 17 2022 (x64 architecture)",
+            "generator": "Visual Studio 17 2022",
+            "toolset": "host=x64",
+            "architecture": "x64",
+            "binaryDir": "${sourceDir}/build/${presetName}",
+            "cacheVariables": {
+                "CMAKE_TOOLCHAIN_FILE": "C:/vcpkg/scripts/buildsystems/vcpkg.cmake",
+                "CMAKE_INSTALL_PREFIX": "${sourceDir}/out/install/${presetName}",
+                "CMAKE_C_COMPILER": "cl.exe",
+                "CMAKE_CXX_COMPILER": "cl.exe"
+            }
+        },
+        {
+            "name": "Win86",
+            "displayName": "Visual Studio Community 2022 Release - x86",
+            "description": "Using compilers for Visual Studio 17 2022 (x86 architecture)",
+            "generator": "Visual Studio 17 2022",
+            "toolset": "host=x86",
+            "architecture": "win32",
+            "binaryDir": "${sourceDir}/build/${presetName}",
+            "cacheVariables": {
+                "CMAKE_TOOLCHAIN_FILE": "C:/vcpkg/scripts/buildsystems/vcpkg.cmake",
+                "CMAKE_INSTALL_PREFIX": "${sourceDir}/out/install/${presetName}",
+                "CMAKE_C_COMPILER": "cl.exe",
+                "CMAKE_CXX_COMPILER": "cl.exe"
+            }
+        },
+        {
+            "name": "Linux",
+            "displayName": "GCC 9.4.0 x86_64-linux-gnu",
+            "description": "Using compilers: C = /usr/bin/gcc, CXX = /usr/bin/g++",
+            "generator": "Unix Makefiles",
+            "binaryDir": "${sourceDir}/build/${presetName}",
+            "cacheVariables": {
+                "CMAKE_INSTALL_PREFIX": "${sourceDir}/out/install/${presetName}",
+                "CMAKE_C_COMPILER": "/usr/bin/gcc",
+                "CMAKE_CXX_COMPILER": "/usr/bin/g++"
+            }
+        },
+        {
+            "name": "Emscripten",
+            "displayName": "Emscripten",
+            "description": "Just build html pretty please",
+            "generator": "Unix Makefiles",
+            "binaryDir": "${sourceDir}/build/${presetName}",
+            "cacheVariables": {
+                "CMAKE_TOOLCHAIN_FILE": "/home/tachi/emsdk/upstream/emscripten/cmake/Modules/Platform/Emscripten.cmake",
+                "CMAKE_INSTALL_PREFIX": "${sourceDir}/out/install/${presetName}"
+            }
+        }
+    ],
+    "buildPresets": [
+        {
+            "name": "Win64-debug",
+            "displayName": "Visual Studio Community 2022 Release - amd64 - Debug",
+            "configurePreset": "Win64",
+            "configuration": "Debug"
+        },
+        {
+            "name": "Win64-release",
+            "displayName": "Visual Studio Community 2022 Release - amd64 - Release",
+            "configurePreset": "Win64",
+            "configuration": "Release"
+        },
+        {
+            "name": "Win86-debug",
+            "displayName": "Visual Studio Community 2022 Release - x86 - Debug",
+            "configurePreset": "Win86",
+            "configuration": "Debug"
+        },
+        {
+            "name": "Win86-release",
+            "displayName": "Visual Studio Community 2022 Release - x86 - Release",
+            "configurePreset": "Win86",
+            "configuration": "Release"
+        },
+        {
+            "name": "Linux-debug",
+            "displayName": "GCC 9.4.0 x86_64-linux-gnu - Debug",
+            "configurePreset": "Linux",
+            "configuration": "Debug"
+        },
+        {
+            "name": "Linux-release",
+            "displayName": "GCC 9.4.0 x86_64-linux-gnu - Release",
+            "configurePreset": "Linux",
+            "configuration": "Release"
+        },
+        {
+            "name": "Emscripten-debug",
+            "displayName": "Emscripten Javascript - Debug",
+            "configurePreset": "Emscripten",
+            "configuration": "Debug"
+        },
+        {
+            "name": "Emscripten-debug",
+            "displayName": "Emscripten Javascript - Release",
+            "configurePreset": "Emscripten",
+            "configuration": "Release"
+        }
+    ]
+}
