@@ -73,8 +73,8 @@ void Bullet::Update(double deltaTime)
             this->mOffset.Y = 0;
         }
         
-        if (this->mPosition.X < -64 || this->mPosition.X > 128 ||
-        this->mPosition.Y < -64 || this->mPosition.Y > 128)
+        if (this->mPosition.X < -8 || this->mPosition.X > 72 ||
+        this->mPosition.Y < -8 || this->mPosition.Y > 72)
         {
             this->Destroy();
         }

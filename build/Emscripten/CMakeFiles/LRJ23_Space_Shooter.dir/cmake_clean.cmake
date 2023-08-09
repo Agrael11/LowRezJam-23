@@ -1,4 +1,8 @@
 file(REMOVE_RECURSE
+  "CMakeFiles/LRJ23_Space_Shooter.dir/src/Boss.cpp.o"
+  "CMakeFiles/LRJ23_Space_Shooter.dir/src/Boss.cpp.o.d"
+  "CMakeFiles/LRJ23_Space_Shooter.dir/src/BossAttackData.cpp.o"
+  "CMakeFiles/LRJ23_Space_Shooter.dir/src/BossAttackData.cpp.o.d"
   "CMakeFiles/LRJ23_Space_Shooter.dir/src/Bullet.cpp.o"
   "CMakeFiles/LRJ23_Space_Shooter.dir/src/Bullet.cpp.o.d"
   "CMakeFiles/LRJ23_Space_Shooter.dir/src/Enemy.cpp.o"

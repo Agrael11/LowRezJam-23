@@ -6,6 +6,7 @@
 #include "Player.h"
 #include "Enemy.h"
 #include "Bullet.h"
+#include "Boss.h"
 
 #define DEATH_ZONE 10000
 
@@ -36,6 +37,7 @@ class GameScene
         std::vector<Bullet> mBullets;
         std::vector<Enemy> mEnemies;
         std::vector<int> mBgTiles;
+        Boss CurrentBoss;
         
         void WriteToFile(std::string path, std::string data);
 

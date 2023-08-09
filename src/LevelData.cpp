@@ -64,10 +64,10 @@ std::string LevelData::ToString(bool simple)
 {
     if (simple)
     {
-        std::string startString = Engine::Helper::string_format("%d,%d,%d", this->mBackground, this->mBossId, this->mEnemySpawnInfos.size());
+        std::string startString = Engine::Helper::string_format("%d|%d|%d", this->mBackground, this->mBossId, this->mEnemySpawnInfos.size());
         for (int i = 0; i < this->mEnemySpawnInfos.size(); i++)
         {
-            startString += "," + this->mEnemySpawnInfos[i].ToString();
+            startString += "|" + this->mEnemySpawnInfos[i].ToString();
         }
         return startString;
     }
@@ -84,7 +84,7 @@ std::string LevelData::ToString(bool simple)
 
 void LevelData::FromString(std::string data)
 {
-    std::vector<std::string> split = Engine::Helper::splitString(data, ',');
+    std::vector<std::string> split = Engine::Helper::splitString(data, '|');
     this->mBackground = std::stoi(split[0]);
     this->mBossId = std::stoi(split[1]);
     int length = std::stoi(split[2]);

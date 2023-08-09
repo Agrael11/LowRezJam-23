@@ -32,7 +32,7 @@ void Game::Init()
     }
     SDL_SetRelativeMouseMode(SDL_TRUE);
     
-    Logger::MinimumPrintLevel = Logger::Error;
+    //Logger::MinimumPrintLevel = Logger::Error;
     
     this->mGameScene.Init();
 }

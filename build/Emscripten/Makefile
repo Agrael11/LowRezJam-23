@@ -129,6 +129,54 @@ LRJ23_Space_Shooter/fast:
 	$(MAKE) $(MAKESILENT) -f CMakeFiles/LRJ23_Space_Shooter.dir/build.make CMakeFiles/LRJ23_Space_Shooter.dir/build
 .PHONY : LRJ23_Space_Shooter/fast
 
+src/Boss.o: src/Boss.cpp.o
+.PHONY : src/Boss.o
+
+# target to build an object file
+src/Boss.cpp.o:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/LRJ23_Space_Shooter.dir/build.make CMakeFiles/LRJ23_Space_Shooter.dir/src/Boss.cpp.o
+.PHONY : src/Boss.cpp.o
+
+src/Boss.i: src/Boss.cpp.i
+.PHONY : src/Boss.i
+
+# target to preprocess a source file
+src/Boss.cpp.i:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/LRJ23_Space_Shooter.dir/build.make CMakeFiles/LRJ23_Space_Shooter.dir/src/Boss.cpp.i
+.PHONY : src/Boss.cpp.i
+
+src/Boss.s: src/Boss.cpp.s
+.PHONY : src/Boss.s
+
+# target to generate assembly for a file
+src/Boss.cpp.s:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/LRJ23_Space_Shooter.dir/build.make CMakeFiles/LRJ23_Space_Shooter.dir/src/Boss.cpp.s
+.PHONY : src/Boss.cpp.s
+
+src/BossAttackData.o: src/BossAttackData.cpp.o
+.PHONY : src/BossAttackData.o
+
+# target to build an object file
+src/BossAttackData.cpp.o:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/LRJ23_Space_Shooter.dir/build.make CMakeFiles/LRJ23_Space_Shooter.dir/src/BossAttackData.cpp.o
+.PHONY : src/BossAttackData.cpp.o
+
+src/BossAttackData.i: src/BossAttackData.cpp.i
+.PHONY : src/BossAttackData.i
+
+# target to preprocess a source file
+src/BossAttackData.cpp.i:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/LRJ23_Space_Shooter.dir/build.make CMakeFiles/LRJ23_Space_Shooter.dir/src/BossAttackData.cpp.i
+.PHONY : src/BossAttackData.cpp.i
+
+src/BossAttackData.s: src/BossAttackData.cpp.s
+.PHONY : src/BossAttackData.s
+
+# target to generate assembly for a file
+src/BossAttackData.cpp.s:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/LRJ23_Space_Shooter.dir/build.make CMakeFiles/LRJ23_Space_Shooter.dir/src/BossAttackData.cpp.s
+.PHONY : src/BossAttackData.cpp.s
+
 src/Bullet.o: src/Bullet.cpp.o
 .PHONY : src/Bullet.o
 
@@ -1026,6 +1074,12 @@ help:
 	@echo "... edit_cache"
 	@echo "... rebuild_cache"
 	@echo "... LRJ23_Space_Shooter"
+	@echo "... src/Boss.o"
+	@echo "... src/Boss.i"
+	@echo "... src/Boss.s"
+	@echo "... src/BossAttackData.o"
+	@echo "... src/BossAttackData.i"
+	@echo "... src/BossAttackData.s"
 	@echo "... src/Bullet.o"
 	@echo "... src/Bullet.i"
 	@echo "... src/Bullet.s"

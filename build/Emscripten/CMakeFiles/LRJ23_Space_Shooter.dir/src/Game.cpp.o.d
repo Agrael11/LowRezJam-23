@@ -747,6 +747,8 @@ CMakeFiles/LRJ23_Space_Shooter.dir/src/Game.cpp.o: \
   /mnt/c/Users/olive/source/repos/LowRezJam\ 23/src/Bullet.h \
   /mnt/c/Users/olive/source/repos/LowRezJam\ 23/src/Enemy.h \
   /mnt/c/Users/olive/source/repos/LowRezJam\ 23/src/EnemySpawnInfo.h \
+  /mnt/c/Users/olive/source/repos/LowRezJam\ 23/src/Boss.h \
+  /mnt/c/Users/olive/source/repos/LowRezJam\ 23/src/BossAttackData.h \
   /mnt/c/Users/olive/source/repos/LowRezJam\ 23/src/Engine/Helper/Logger.h \
   /mnt/c/Users/olive/source/repos/LowRezJam\ 23/src/Engine/Helper/format.h \
   /home/tachi/emsdk/upstream/emscripten/cache/sysroot/include/c++/v1/sstream \

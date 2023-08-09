@@ -38,6 +38,7 @@
 #include "Engine/Math/Rectangle.h"
 #include "Engine/Math/Vector2f.h"
 #include "Levels.h"
+#include "BossAttackData.h"
 
 using namespace Engine::Rendering;
 using namespace Engine::Helper;
@@ -64,7 +65,7 @@ void GameScene::WriteToFile(std::string path, std::string data)
 
 
 void GameScene::Init()
-{
+{    
     this->Reset();
 }
 
@@ -76,6 +77,7 @@ void GameScene::LoadContent(Engine::Rendering::Renderer& renderer)
     TextureManager::LoadTexture("Ship", "Assets/Ship.png", renderer);
     TextureManager::LoadTexture("Enemies", "Assets/Enemies.png", renderer);
     TextureManager::LoadTexture("Life", "Assets/Life.png", renderer);
+    TextureManager::LoadTexture("Bosses", "Assets/Bosses.png", renderer);
 
     //LOAD SPRITES
     Sprite bg0Sprite;
@@ -89,6 +91,8 @@ void GameScene::LoadContent(Engine::Rendering::Renderer& renderer)
     Sprite enemyZigzag;
     Sprite enemyCircle;
     Sprite life;
+    Sprite boss0;
+
     bg0Sprite.Load(TextureManager::GetTexture("BG_1"), Rectangle(0,0,8,8), renderer);
     bg1Sprite.Load(TextureManager::GetTexture("BG_1"), Rectangle(8,0,8,8), renderer);
     bg2Sprite.Load(TextureManager::GetTexture("BG_1"), Rectangle(16,0,8,8), renderer);
@@ -100,6 +104,7 @@ void GameScene::LoadContent(Engine::Rendering::Renderer& renderer)
     enemyZigzag.Load(TextureManager::GetTexture("Enemies"), Rectangle(ENEMY_WIDTH, 0, ENEMY_WIDTH, ENEMY_HEIGHT), renderer);
     enemyCircle.Load(TextureManager::GetTexture("Enemies"), Rectangle(2*ENEMY_WIDTH, 0, ENEMY_WIDTH, ENEMY_HEIGHT), renderer);
     life.Load(TextureManager::GetTexture("Life"), Rectangle(0, 0, 4, 4), renderer);
+    boss0.Load(TextureManager::GetTexture("Bosses"), Rectangle(0, 0, BOSS_WEIGHT, BOSS_HEIGHT), renderer);
 
     SpriteManager::AddSprite("BG_0", bg0Sprite);
     SpriteManager::AddSprite("BG_1", bg1Sprite);
@@ -112,6 +117,7 @@ void GameScene::LoadContent(Engine::Rendering::Renderer& renderer)
     SpriteManager::AddSprite("Enemy_Zigzag", enemyZigzag);
     SpriteManager::AddSprite("Enemy_Circle", enemyCircle);
     SpriteManager::AddSprite("Life", life);
+    SpriteManager::AddSprite("Boss_0", boss0);
 
     //LOAD LEVELS
     LoadLevelFromFile("Assets/Level0.lvl");
@@ -153,6 +159,7 @@ void GameScene::Reset()
             this->mBgTiles.push_back(this->GenerateBgPart());
         }
     }
+    this->CurrentBoss.Recycle(0);
 }
 
 bool GameScene::Update(double delta)
@@ -198,18 +205,31 @@ bool GameScene::Update(double delta)
         Rectangle collisionRectnagle;
         if (this->mBullets[i].IsOwnedByPlayer())
         {
-            for (int j = (int)this->mEnemies.size()-1; j >= 0; j--)
+            if (this->mLevelStage == LevelStage::Level)
             {
-                if (this->mEnemies[j].IsDestroyed() == 0)
+                for (int j = (int)this->mEnemies.size()-1; j >= 0; j--)
                 {
-                    collisionRectnagle = this->mEnemies[j].GetRectangle();
-                    if (collisionRectnagle.Intersects(bulletRectnagle))
+                    if (this->mEnemies[j].IsDestroyed() == 0)
                     {
-                        //TODO: Do stuff;
-                        this->mEnemies[j].Destroy(1);
-                        this->mBullets[i].Destroy();
-                        break;
+                        collisionRectnagle = this->mEnemies[j].GetRectangle();
+                        if (collisionRectnagle.Intersects(bulletRectnagle))
+                        {
+                            //TODO: Do stuff;
+                            this->mEnemies[j].Destroy(1);
+                            this->mBullets[i].Destroy();
+                            break;
+                        }
                     }
+                }
+            }
+            else if (this->mLevelStage == LevelStage::Bossfight)
+            {
+                collisionRectnagle = this->CurrentBoss.GetRectangle();
+                if (collisionRectnagle.Intersects(bulletRectnagle))
+                {
+                    //TODO: Do stuff;
+                    this->CurrentBoss.SetHealth(this->CurrentBoss.GetHealth()-2);
+                    this->mBullets[i].Destroy();
                 }
             }
         }
@@ -276,14 +296,49 @@ bool GameScene::UpdateBossfight(double delta)
     }
     else
     {
+        if (this->CurrentBoss.GetHealth() <= 0)
+        {
+            this->mCurrentLevel = 0;
+            this->mCurrentEnemy = 0;
+            this->mTargetTimer = levels[this->mCurrentLevel].GetEnemySpawnInfo(this->mCurrentEnemy).GetStartTimer();
+            this->mLevelStage = LevelStage::Level;
+            this->mTimerStatus = 0;
+            Logger::Log(Logger::Fatal, "Moving to Stage 1 - Level.");
+            int hp = this->mPlayer.GetHealth();
+            hp += 50;
+            if (hp > 100)
+            {
+                if (this->mLives > 5)
+                {
+                    hp = 100;
+                }
+                else
+                {
+                    hp -= 100;
+                    this->mLives += 1;
+                }
+                this->mPlayer.SetHealth(hp);
+            }
+        }
+        else
+        {
+            this->CurrentBoss.Update(delta);
+            
+            double perc = this->CurrentBoss.GetHealth() / 100.;
+            if (this->mVisualProgress > perc)
+            {
+                this->mVisualProgress -= delta/16./50.;
+            }
+            else
+            {
+                this->mVisualProgress = perc;
+            }
+            
+            std::vector<Bullet> spawnedBullets = this->CurrentBoss.SpawnBullets();
+            this->mBullets.insert(this->mBullets.end(), std::make_move_iterator(spawnedBullets.begin()), std::make_move_iterator(spawnedBullets.end()));
+            spawnedBullets.clear();
+        }
         //TODO: BOSS FIGHT!!;
-        Logger::Log(Logger::Fatal, "Skipping as no bossfights are implemented.");
-        this->mCurrentLevel = 0;
-        this->mCurrentEnemy = 0;
-        this->mTargetTimer = levels[this->mCurrentLevel].GetEnemySpawnInfo(this->mCurrentEnemy).GetStartTimer();
-        this->mLevelStage = LevelStage::Level;
-        this->mTimerStatus = 0;
-        Logger::Log(Logger::Fatal, "Moving to Stage 1 - Level.");
     }
 
     return true;
@@ -396,14 +451,22 @@ void GameScene::DrawGame(double delta, Engine::Rendering::Renderer& renderer)
         }
     }
 
-    for (int i = 0; i < (int)this->mEnemies.size(); i++)
-    {
-        this->mEnemies[i].Draw(renderer);
-    }
-
     for (int i = 0; i < (int)this->mBullets.size(); i++)
     {
         this->mBullets[i].Draw(renderer);
+    }
+
+    if (this->mLevelStage == LevelStage::Bossfight)
+    {
+        this->CurrentBoss.Draw(renderer);
+    }
+
+    else if (this->mLevelStage == LevelStage::Level)
+    {
+        for (int i = 0; i < (int)this->mEnemies.size(); i++)
+        {
+            this->mEnemies[i].Draw(renderer);
+        }
     }
 
     this->mPlayer.Draw(renderer);
@@ -412,14 +475,27 @@ void GameScene::DrawGame(double delta, Engine::Rendering::Renderer& renderer)
 void GameScene::DrawUI(double delta, Engine::Rendering::Renderer& renderer)
 {
     Rectangle destination = Rectangle(0,62,(int)(this->mVisualProgress*64),2);
-    renderer.DrawSprite(SpriteManager::GetSprite("Bullets_2"), destination);
-    destination.X = destination.Width;
-    destination.Width = 64 - destination.Width;
-    renderer.DrawSprite(SpriteManager::GetSprite("Bullets_0"), destination);
+    // Level Progress
+    if (this->mLevelStage == LevelStage::Level)
+    {
+        renderer.DrawSprite(SpriteManager::GetSprite("Bullets_2"), destination);
+        destination.X = destination.Width;
+        destination.Width = 64 - destination.Width;
+        renderer.DrawSprite(SpriteManager::GetSprite("Bullets_0"), destination);
+    }
+    else if (this->mLevelStage == LevelStage::Bossfight) // Boss Health
+    {
+        renderer.DrawSprite(SpriteManager::GetSprite("Bullets_1"), destination);
+        destination.X = destination.Width;
+        destination.Width = 64 - destination.Width;
+        renderer.DrawSprite(SpriteManager::GetSprite("Bullets_0"), destination);
+    }
+
+    //Player HP bar
     destination = Rectangle(0, 0, (int)(64*this->mVisualPlayerHealth/100.f), 2);
-    
     renderer.DrawSprite(SpriteManager::GetSprite((this->mVisualPlayerHealth > 66)?"Bullets_2":((this->mVisualPlayerHealth > 33)?"Bullets_0":"Bullets_1")) , destination);
     
+    //Player lifes
     for (int i = 0; i < this->mLives; i++)
     {
         destination.X = i*5;

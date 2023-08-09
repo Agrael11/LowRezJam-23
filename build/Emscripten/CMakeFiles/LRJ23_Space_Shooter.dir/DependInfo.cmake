@@ -9,6 +9,8 @@ set(CMAKE_DEPENDS_LANGUAGES
 # The set of dependency files which are needed:
 set(CMAKE_DEPENDS_DEPENDENCY_FILES
   "/mnt/c/Users/olive/source/repos/LowRezJam 23/src/Engine/Rendering/OpenGL_ES/glad.c" "CMakeFiles/LRJ23_Space_Shooter.dir/src/Engine/Rendering/OpenGL_ES/glad.c.o" "gcc" "CMakeFiles/LRJ23_Space_Shooter.dir/src/Engine/Rendering/OpenGL_ES/glad.c.o.d"
+  "/mnt/c/Users/olive/source/repos/LowRezJam 23/src/Boss.cpp" "CMakeFiles/LRJ23_Space_Shooter.dir/src/Boss.cpp.o" "gcc" "CMakeFiles/LRJ23_Space_Shooter.dir/src/Boss.cpp.o.d"
+  "/mnt/c/Users/olive/source/repos/LowRezJam 23/src/BossAttackData.cpp" "CMakeFiles/LRJ23_Space_Shooter.dir/src/BossAttackData.cpp.o" "gcc" "CMakeFiles/LRJ23_Space_Shooter.dir/src/BossAttackData.cpp.o.d"
   "/mnt/c/Users/olive/source/repos/LowRezJam 23/src/Bullet.cpp" "CMakeFiles/LRJ23_Space_Shooter.dir/src/Bullet.cpp.o" "gcc" "CMakeFiles/LRJ23_Space_Shooter.dir/src/Bullet.cpp.o.d"
   "/mnt/c/Users/olive/source/repos/LowRezJam 23/src/Enemy.cpp" "CMakeFiles/LRJ23_Space_Shooter.dir/src/Enemy.cpp.o" "gcc" "CMakeFiles/LRJ23_Space_Shooter.dir/src/Enemy.cpp.o.d"
   "/mnt/c/Users/olive/source/repos/LowRezJam 23/src/EnemySpawnInfo.cpp" "CMakeFiles/LRJ23_Space_Shooter.dir/src/EnemySpawnInfo.cpp.o" "gcc" "CMakeFiles/LRJ23_Space_Shooter.dir/src/EnemySpawnInfo.cpp.o.d"

@@ -573,10 +573,38 @@ CMakeFiles/LRJ23_Space_Shooter.dir/src/GameScene.cpp.s: cmake_force
 	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green "Compiling CXX source to assembly CMakeFiles/LRJ23_Space_Shooter.dir/src/GameScene.cpp.s"
 	/home/tachi/emsdk/upstream/emscripten/em++ $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -S "/mnt/c/Users/olive/source/repos/LowRezJam 23/src/GameScene.cpp" -o CMakeFiles/LRJ23_Space_Shooter.dir/src/GameScene.cpp.s
 
+CMakeFiles/LRJ23_Space_Shooter.dir/src/Boss.cpp.o: CMakeFiles/LRJ23_Space_Shooter.dir/flags.make
+CMakeFiles/LRJ23_Space_Shooter.dir/src/Boss.cpp.o: ../../src/Boss.cpp
+CMakeFiles/LRJ23_Space_Shooter.dir/src/Boss.cpp.o: CMakeFiles/LRJ23_Space_Shooter.dir/compiler_depend.ts
+	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green --progress-dir="/mnt/c/Users/olive/source/repos/LowRezJam 23/build/Emscripten/CMakeFiles" --progress-num=$(CMAKE_PROGRESS_37) "Building CXX object CMakeFiles/LRJ23_Space_Shooter.dir/src/Boss.cpp.o"
+	/home/tachi/emsdk/upstream/emscripten/em++ $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -MD -MT CMakeFiles/LRJ23_Space_Shooter.dir/src/Boss.cpp.o -MF CMakeFiles/LRJ23_Space_Shooter.dir/src/Boss.cpp.o.d -o CMakeFiles/LRJ23_Space_Shooter.dir/src/Boss.cpp.o -c "/mnt/c/Users/olive/source/repos/LowRezJam 23/src/Boss.cpp"
+
+CMakeFiles/LRJ23_Space_Shooter.dir/src/Boss.cpp.i: cmake_force
+	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green "Preprocessing CXX source to CMakeFiles/LRJ23_Space_Shooter.dir/src/Boss.cpp.i"
+	/home/tachi/emsdk/upstream/emscripten/em++ $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -E "/mnt/c/Users/olive/source/repos/LowRezJam 23/src/Boss.cpp" > CMakeFiles/LRJ23_Space_Shooter.dir/src/Boss.cpp.i
+
+CMakeFiles/LRJ23_Space_Shooter.dir/src/Boss.cpp.s: cmake_force
+	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green "Compiling CXX source to assembly CMakeFiles/LRJ23_Space_Shooter.dir/src/Boss.cpp.s"
+	/home/tachi/emsdk/upstream/emscripten/em++ $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -S "/mnt/c/Users/olive/source/repos/LowRezJam 23/src/Boss.cpp" -o CMakeFiles/LRJ23_Space_Shooter.dir/src/Boss.cpp.s
+
+CMakeFiles/LRJ23_Space_Shooter.dir/src/BossAttackData.cpp.o: CMakeFiles/LRJ23_Space_Shooter.dir/flags.make
+CMakeFiles/LRJ23_Space_Shooter.dir/src/BossAttackData.cpp.o: ../../src/BossAttackData.cpp
+CMakeFiles/LRJ23_Space_Shooter.dir/src/BossAttackData.cpp.o: CMakeFiles/LRJ23_Space_Shooter.dir/compiler_depend.ts
+	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green --progress-dir="/mnt/c/Users/olive/source/repos/LowRezJam 23/build/Emscripten/CMakeFiles" --progress-num=$(CMAKE_PROGRESS_38) "Building CXX object CMakeFiles/LRJ23_Space_Shooter.dir/src/BossAttackData.cpp.o"
+	/home/tachi/emsdk/upstream/emscripten/em++ $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -MD -MT CMakeFiles/LRJ23_Space_Shooter.dir/src/BossAttackData.cpp.o -MF CMakeFiles/LRJ23_Space_Shooter.dir/src/BossAttackData.cpp.o.d -o CMakeFiles/LRJ23_Space_Shooter.dir/src/BossAttackData.cpp.o -c "/mnt/c/Users/olive/source/repos/LowRezJam 23/src/BossAttackData.cpp"
+
+CMakeFiles/LRJ23_Space_Shooter.dir/src/BossAttackData.cpp.i: cmake_force
+	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green "Preprocessing CXX source to CMakeFiles/LRJ23_Space_Shooter.dir/src/BossAttackData.cpp.i"
+	/home/tachi/emsdk/upstream/emscripten/em++ $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -E "/mnt/c/Users/olive/source/repos/LowRezJam 23/src/BossAttackData.cpp" > CMakeFiles/LRJ23_Space_Shooter.dir/src/BossAttackData.cpp.i
+
+CMakeFiles/LRJ23_Space_Shooter.dir/src/BossAttackData.cpp.s: cmake_force
+	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green "Compiling CXX source to assembly CMakeFiles/LRJ23_Space_Shooter.dir/src/BossAttackData.cpp.s"
+	/home/tachi/emsdk/upstream/emscripten/em++ $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -S "/mnt/c/Users/olive/source/repos/LowRezJam 23/src/BossAttackData.cpp" -o CMakeFiles/LRJ23_Space_Shooter.dir/src/BossAttackData.cpp.s
+
 CMakeFiles/LRJ23_Space_Shooter.dir/src/Main.cpp.o: CMakeFiles/LRJ23_Space_Shooter.dir/flags.make
 CMakeFiles/LRJ23_Space_Shooter.dir/src/Main.cpp.o: ../../src/Main.cpp
 CMakeFiles/LRJ23_Space_Shooter.dir/src/Main.cpp.o: CMakeFiles/LRJ23_Space_Shooter.dir/compiler_depend.ts
-	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green --progress-dir="/mnt/c/Users/olive/source/repos/LowRezJam 23/build/Emscripten/CMakeFiles" --progress-num=$(CMAKE_PROGRESS_37) "Building CXX object CMakeFiles/LRJ23_Space_Shooter.dir/src/Main.cpp.o"
+	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green --progress-dir="/mnt/c/Users/olive/source/repos/LowRezJam 23/build/Emscripten/CMakeFiles" --progress-num=$(CMAKE_PROGRESS_39) "Building CXX object CMakeFiles/LRJ23_Space_Shooter.dir/src/Main.cpp.o"
 	/home/tachi/emsdk/upstream/emscripten/em++ $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -MD -MT CMakeFiles/LRJ23_Space_Shooter.dir/src/Main.cpp.o -MF CMakeFiles/LRJ23_Space_Shooter.dir/src/Main.cpp.o.d -o CMakeFiles/LRJ23_Space_Shooter.dir/src/Main.cpp.o -c "/mnt/c/Users/olive/source/repos/LowRezJam 23/src/Main.cpp"
 
 CMakeFiles/LRJ23_Space_Shooter.dir/src/Main.cpp.i: cmake_force
@@ -625,6 +653,8 @@ LRJ23_Space_Shooter_OBJECTS = \
 "CMakeFiles/LRJ23_Space_Shooter.dir/src/EnemySpawnInfo.cpp.o" \
 "CMakeFiles/LRJ23_Space_Shooter.dir/src/LevelData.cpp.o" \
 "CMakeFiles/LRJ23_Space_Shooter.dir/src/GameScene.cpp.o" \
+"CMakeFiles/LRJ23_Space_Shooter.dir/src/Boss.cpp.o" \
+"CMakeFiles/LRJ23_Space_Shooter.dir/src/BossAttackData.cpp.o" \
 "CMakeFiles/LRJ23_Space_Shooter.dir/src/Main.cpp.o"
 
 # External object files for target LRJ23_Space_Shooter
@@ -666,11 +696,13 @@ LRJ23_Space_Shooter.html: CMakeFiles/LRJ23_Space_Shooter.dir/src/Bullet.cpp.o
 LRJ23_Space_Shooter.html: CMakeFiles/LRJ23_Space_Shooter.dir/src/EnemySpawnInfo.cpp.o
 LRJ23_Space_Shooter.html: CMakeFiles/LRJ23_Space_Shooter.dir/src/LevelData.cpp.o
 LRJ23_Space_Shooter.html: CMakeFiles/LRJ23_Space_Shooter.dir/src/GameScene.cpp.o
+LRJ23_Space_Shooter.html: CMakeFiles/LRJ23_Space_Shooter.dir/src/Boss.cpp.o
+LRJ23_Space_Shooter.html: CMakeFiles/LRJ23_Space_Shooter.dir/src/BossAttackData.cpp.o
 LRJ23_Space_Shooter.html: CMakeFiles/LRJ23_Space_Shooter.dir/src/Main.cpp.o
 LRJ23_Space_Shooter.html: CMakeFiles/LRJ23_Space_Shooter.dir/build.make
 LRJ23_Space_Shooter.html: CMakeFiles/LRJ23_Space_Shooter.dir/objects1.rsp
 LRJ23_Space_Shooter.html: CMakeFiles/LRJ23_Space_Shooter.dir/link.txt
-	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green --bold --progress-dir="/mnt/c/Users/olive/source/repos/LowRezJam 23/build/Emscripten/CMakeFiles" --progress-num=$(CMAKE_PROGRESS_38) "Linking CXX executable LRJ23_Space_Shooter.html"
+	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green --bold --progress-dir="/mnt/c/Users/olive/source/repos/LowRezJam 23/build/Emscripten/CMakeFiles" --progress-num=$(CMAKE_PROGRESS_40) "Linking CXX executable LRJ23_Space_Shooter.html"
 	$(CMAKE_COMMAND) -E cmake_link_script CMakeFiles/LRJ23_Space_Shooter.dir/link.txt --verbose=$(VERBOSE)
 
 # Rule to build all files generated by this target.

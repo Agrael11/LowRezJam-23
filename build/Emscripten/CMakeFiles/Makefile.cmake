@@ -12,28 +12,17 @@ set(CMAKE_MAKEFILE_DEPENDS
   "CMakeFiles/3.22.1/CMakeCCompiler.cmake"
   "CMakeFiles/3.22.1/CMakeCXXCompiler.cmake"
   "CMakeFiles/3.22.1/CMakeSystem.cmake"
-  "/usr/share/cmake-3.22/Modules/CMakeCCompiler.cmake.in"
   "/usr/share/cmake-3.22/Modules/CMakeCInformation.cmake"
-  "/usr/share/cmake-3.22/Modules/CMakeCXXCompiler.cmake.in"
   "/usr/share/cmake-3.22/Modules/CMakeCXXInformation.cmake"
   "/usr/share/cmake-3.22/Modules/CMakeCommonLanguageInclude.cmake"
-  "/usr/share/cmake-3.22/Modules/CMakeDetermineCCompiler.cmake"
-  "/usr/share/cmake-3.22/Modules/CMakeDetermineCXXCompiler.cmake"
-  "/usr/share/cmake-3.22/Modules/CMakeDetermineCompiler.cmake"
-  "/usr/share/cmake-3.22/Modules/CMakeDetermineSystem.cmake"
-  "/usr/share/cmake-3.22/Modules/CMakeFindBinUtils.cmake"
   "/usr/share/cmake-3.22/Modules/CMakeGenericSystem.cmake"
   "/usr/share/cmake-3.22/Modules/CMakeInitializeConfigs.cmake"
   "/usr/share/cmake-3.22/Modules/CMakeLanguageInformation.cmake"
-  "/usr/share/cmake-3.22/Modules/CMakeSystem.cmake.in"
   "/usr/share/cmake-3.22/Modules/CMakeSystemSpecificInformation.cmake"
   "/usr/share/cmake-3.22/Modules/CMakeSystemSpecificInitialize.cmake"
-  "/usr/share/cmake-3.22/Modules/CMakeTestCCompiler.cmake"
-  "/usr/share/cmake-3.22/Modules/CMakeTestCXXCompiler.cmake"
   "/usr/share/cmake-3.22/Modules/Compiler/CMakeCommonCompilerMacros.cmake"
   "/usr/share/cmake-3.22/Modules/Compiler/Clang-C.cmake"
   "/usr/share/cmake-3.22/Modules/Compiler/Clang-CXX.cmake"
-  "/usr/share/cmake-3.22/Modules/Compiler/Clang-FindBinUtils.cmake"
   "/usr/share/cmake-3.22/Modules/Compiler/Clang.cmake"
   "/usr/share/cmake-3.22/Modules/Compiler/GNU.cmake"
   )
@@ -46,9 +35,6 @@ set(CMAKE_MAKEFILE_OUTPUTS
 
 # Byproducts of CMake generate step:
 set(CMAKE_MAKEFILE_PRODUCTS
-  "CMakeFiles/3.22.1/CMakeSystem.cmake"
-  "CMakeFiles/3.22.1/CMakeCCompiler.cmake"
-  "CMakeFiles/3.22.1/CMakeCXXCompiler.cmake"
   "CMakeFiles/CMakeDirectoryInformation.cmake"
   )
 
