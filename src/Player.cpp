@@ -12,16 +12,12 @@ Player::Player()
 {
     this->mPosition = Vector2f((64-PLAYER_WIDTH)/2.f, (float)PLAYER_HEIGHT);
     this->mHealth = 100.f;
-    this->mVisualHealth = 100.f;
-    this->mVisualHealthSpeed = 1.f;
 }
 
 void Player::Draw(Engine::Rendering::Renderer &renderer)
 {
     Rectangle dest = Rectangle((int)this->mPosition.X, (int)this->mPosition.Y, PLAYER_WIDTH, PLAYER_HEIGHT);
     renderer.DrawSprite(SpriteManager::GetSprite("Ship_Straight") , dest);
-    dest = Rectangle(0, 0, (int)(64*this->mVisualHealth/100.f), 2);
-    renderer.DrawSprite(SpriteManager::GetSprite((this->mHealth > 66.f)?"Bullets_2":((this->mHealth > 33.f)?"Bullets_0":"Bullets_1")) , dest);
 }
 
 void Player::Update(double deltaTime)
@@ -30,19 +26,6 @@ void Player::Update(double deltaTime)
     if (this->mPosition.X > 64 - PLAYER_WIDTH) this->mPosition.X = 64 - PLAYER_WIDTH;
     if (this->mPosition.Y < 0) this->mPosition.Y = 0;
     if (this->mPosition.Y > 64 - PLAYER_HEIGHT) this->mPosition.Y = 64 - PLAYER_HEIGHT;
-    float difference = this->mVisualHealth - this->mHealth;
-    if (abs(difference) < this->mVisualHealthSpeed)
-    {
-        this->mVisualHealth = this->mHealth;
-    }
-    else if (difference < 0)
-    {
-        this->mVisualHealth += mVisualHealthSpeed * (float)deltaTime / 16.f * 2;
-    }
-    else if (difference > 0)
-    {
-        this->mVisualHealth -= mVisualHealthSpeed * (float)deltaTime / 16.f * 2;
-    }
 }
 
 void Player::Move(Vector2f target)

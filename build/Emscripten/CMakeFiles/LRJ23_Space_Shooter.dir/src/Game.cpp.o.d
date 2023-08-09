@@ -741,6 +741,7 @@ CMakeFiles/LRJ23_Space_Shooter.dir/src/Game.cpp.o: \
   /mnt/c/Users/olive/source/repos/LowRezJam\ 23/src/Engine/Rendering/FontTexture.h \
   /mnt/c/Users/olive/source/repos/LowRezJam\ 23/src/Engine/Rendering/OpenGL/FontTexture.h \
   /mnt/c/Users/olive/source/repos/LowRezJam\ 23/src/Engine/Rendering/OpenGL/../../Math/Color.h \
+  /mnt/c/Users/olive/source/repos/LowRezJam\ 23/src/GameScene.h \
   /mnt/c/Users/olive/source/repos/LowRezJam\ 23/src/Player.h \
   /mnt/c/Users/olive/source/repos/LowRezJam\ 23/src/Engine/Math/Vector2f.h \
   /mnt/c/Users/olive/source/repos/LowRezJam\ 23/src/Bullet.h \
@@ -750,27 +751,4 @@ CMakeFiles/LRJ23_Space_Shooter.dir/src/Game.cpp.o: \
   /mnt/c/Users/olive/source/repos/LowRezJam\ 23/src/Engine/Helper/format.h \
   /home/tachi/emsdk/upstream/emscripten/cache/sysroot/include/c++/v1/sstream \
   /mnt/c/Users/olive/source/repos/LowRezJam\ 23/src/Engine/Audio/Audio.h \
-  /mnt/c/Users/olive/source/repos/LowRezJam\ 23/src/Engine/Support.h \
-  /mnt/c/Users/olive/source/repos/LowRezJam\ 23/src/TextureManager.h \
-  /mnt/c/Users/olive/source/repos/LowRezJam\ 23/src/SpriteManager.h \
-  /mnt/c/Users/olive/source/repos/LowRezJam\ 23/src/LevelData.h \
-  /mnt/c/Users/olive/source/repos/LowRezJam\ 23/src/Levels.h \
-  /mnt/c/Users/olive/source/repos/LowRezJam\ 23/src/Engine/Helper/Format.h \
-  /home/tachi/emsdk/upstream/emscripten/cache/sysroot/include/c++/v1/fstream \
-  /home/tachi/emsdk/upstream/emscripten/cache/sysroot/include/c++/v1/filesystem \
-  /home/tachi/emsdk/upstream/emscripten/cache/sysroot/include/c++/v1/__filesystem/copy_options.h \
-  /home/tachi/emsdk/upstream/emscripten/cache/sysroot/include/c++/v1/__filesystem/directory_entry.h \
-  /home/tachi/emsdk/upstream/emscripten/cache/sysroot/include/c++/v1/__filesystem/file_status.h \
-  /home/tachi/emsdk/upstream/emscripten/cache/sysroot/include/c++/v1/__filesystem/file_type.h \
-  /home/tachi/emsdk/upstream/emscripten/cache/sysroot/include/c++/v1/__filesystem/perms.h \
-  /home/tachi/emsdk/upstream/emscripten/cache/sysroot/include/c++/v1/__filesystem/filesystem_error.h \
-  /home/tachi/emsdk/upstream/emscripten/cache/sysroot/include/c++/v1/__filesystem/path.h \
-  /home/tachi/emsdk/upstream/emscripten/cache/sysroot/include/c++/v1/iomanip \
-  /home/tachi/emsdk/upstream/emscripten/cache/sysroot/include/c++/v1/__filesystem/operations.h \
-  /home/tachi/emsdk/upstream/emscripten/cache/sysroot/include/c++/v1/__filesystem/perm_options.h \
-  /home/tachi/emsdk/upstream/emscripten/cache/sysroot/include/c++/v1/__filesystem/space_info.h \
-  /home/tachi/emsdk/upstream/emscripten/cache/sysroot/include/c++/v1/__filesystem/directory_iterator.h \
-  /home/tachi/emsdk/upstream/emscripten/cache/sysroot/include/c++/v1/__filesystem/directory_options.h \
-  /home/tachi/emsdk/upstream/emscripten/cache/sysroot/include/c++/v1/__filesystem/path_iterator.h \
-  /home/tachi/emsdk/upstream/emscripten/cache/sysroot/include/c++/v1/__filesystem/recursive_directory_iterator.h \
-  /home/tachi/emsdk/upstream/emscripten/cache/sysroot/include/c++/v1/__filesystem/u8path.h
+  /mnt/c/Users/olive/source/repos/LowRezJam\ 23/src/Engine/Support.h

@@ -36,7 +36,7 @@ ${RENDERER_SOURCE_FILES}
 "./src/Engine/Math/Vector2f.cpp" "./src/Engine/Math/Vector2.cpp" "./src/Engine/Math/Vector3f.cpp" "./src/Engine/Math/Vector3.cpp" "./src/Engine/Math/Rectanglef.cpp" "./src/Engine/Math/Rectangle.cpp" "./src/Engine/Math/Color.cpp" "./src/Engine/Math/Colorf.cpp" "./src/Engine/Math/MathHelper.cpp"
 "./src/Engine/BaseGame.cpp" "./src/Engine/Support.cpp")
 set (GAME_SOURCE_FILES "./src/TextureManager.cpp" "./src/SpriteManager.cpp" "./src/Game.cpp" "./src/Player.cpp" "./src/Enemy.cpp" "./src/Bullet.cpp"
-"./src/EnemySpawnInfo.cpp" "./src/LevelData.cpp")
+"./src/EnemySpawnInfo.cpp" "./src/LevelData.cpp" "./src/GameScene.cpp")
 set (SOURCE_FILES ${ENGINE_SOURCE_FILES} ${GAME_SOURCE_FILES} "./src/Main.cpp")
 
 if (UNIX)

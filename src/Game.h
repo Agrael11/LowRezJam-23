@@ -15,11 +15,7 @@
 #include "Engine/Rendering/FontTexture.h"
 
 
-#include "Player.h"
-#include "Enemy.h"
-#include "Bullet.h"
-
-#define DEATH_ZONE 10000
+#include "GameScene.h"
 
 class Game: public Engine::BaseGame
 {
@@ -33,23 +29,12 @@ private:
     Engine::Math::Colorf mColorPurple;
     Engine::Math::Colorf mColorLightGreen;
     Engine::Rendering::Shader mShader;
-    int mCurrentLevel;
-    int mLevelStage;
-    int mCurrentEnemy;
-    double mTimerStatus;
-    double mTargetTimer;
-    double mProgressPerc;
-    bool mFirstTime;
 
-    Player mPlayer;
+    GameScene mGameScene;
     
 public:
     Engine::Rendering::RenderTexture mainRenderTexture;
     Engine::Rendering::Sprite mainRenderTargetSprite;
-    float scroll;
-    float scrollSpeed;
-    std::vector<Bullet> bullets;
-    std::vector<Enemy> enemies;
 
 private:
     void KeyDown(SDL_KeyboardEvent e);

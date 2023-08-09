@@ -61,6 +61,8 @@ file(REMOVE_RECURSE
   "CMakeFiles/LRJ23_Space_Shooter.dir/src/Engine/Support.cpp.o.d"
   "CMakeFiles/LRJ23_Space_Shooter.dir/src/Game.cpp.o"
   "CMakeFiles/LRJ23_Space_Shooter.dir/src/Game.cpp.o.d"
+  "CMakeFiles/LRJ23_Space_Shooter.dir/src/GameScene.cpp.o"
+  "CMakeFiles/LRJ23_Space_Shooter.dir/src/GameScene.cpp.o.d"
   "CMakeFiles/LRJ23_Space_Shooter.dir/src/LevelData.cpp.o"
   "CMakeFiles/LRJ23_Space_Shooter.dir/src/LevelData.cpp.o.d"
   "CMakeFiles/LRJ23_Space_Shooter.dir/src/Main.cpp.o"

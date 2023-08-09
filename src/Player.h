@@ -15,8 +15,6 @@ class Player
         Engine::Math::Vector2f mPosition;
 
         float mHealth;
-        float mVisualHealth;
-        float mVisualHealthSpeed;
 
     public:
         Player();

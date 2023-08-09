@@ -701,6 +701,7 @@ CMakeFiles/LRJ23_Space_Shooter.dir/src/Main.cpp.o: \
   /mnt/c/Users/olive/source/repos/LowRezJam\ 23/src/Engine/Rendering/FontTexture.h \
   /mnt/c/Users/olive/source/repos/LowRezJam\ 23/src/Engine/Rendering/OpenGL/FontTexture.h \
   /mnt/c/Users/olive/source/repos/LowRezJam\ 23/src/Engine/Rendering/OpenGL/../../Math/Color.h \
+  /mnt/c/Users/olive/source/repos/LowRezJam\ 23/src/GameScene.h \
   /mnt/c/Users/olive/source/repos/LowRezJam\ 23/src/Player.h \
   /mnt/c/Users/olive/source/repos/LowRezJam\ 23/src/Engine/Math/Vector2f.h \
   /mnt/c/Users/olive/source/repos/LowRezJam\ 23/src/Bullet.h \
