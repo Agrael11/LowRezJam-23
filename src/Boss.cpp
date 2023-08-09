@@ -55,19 +55,103 @@ void Boss::Update(double deltaTime)
                 }
                 break;
             case 1:
-                this->mPosition = this->mPosition - (this->mVelocity * ((float)deltaTime/17.f) * 0.1f);
-                    this->mTimer += ((float)deltaTime/17.f)*2.f;
-                if (this->mPosition.Y < 37)
+                if (this->mAttackDatas[this->mCurrentAttack].GetAttackType() == BossAttackData::AttackType::Cone)
                 {
-                    this->mStage = 2;
+                    this->mPosition = this->mPosition - (this->mVelocity * ((float)deltaTime/17.f) * 0.f);
+                    if (this->mPosition.Y > 58)
+                    {
+                        this->mPosition = this->mPosition - (this->mVelocity * ((float)deltaTime/17.f) * 0.5f);
+                    }
+                    this->mTimer += ((float)deltaTime/17.f)*2.f;
+                    if (this->mPosition.Y < 56)
+                    {
+                        this->mStage = 2;
+                    }
+                }
+                else if (this->mAttackDatas[this->mCurrentAttack].GetAttackType() == BossAttackData::AttackType::Straight)
+                {
+                    this->mPosition.X = this->mPosition.X - (this->mVelocity.Y * ((float)deltaTime/17.f) * 0.5f);
+                    this->mTimer += ((float)deltaTime/17.f)*2.f;
+                    printf("1: %f\n", this->mPosition.X);
+                    if (this->mPosition.X < -8)
+                    {
+                        this->mStage = 2;
+                    }
+                }
+                else
+                {
+                    if (this->mPosition.X > 16)
+                    {
+                        this->mPosition.X = this->mPosition.X - (this->mVelocity.Y * ((float)deltaTime/17.f) * 0.5f);
+                    }
+                    else if (this->mPosition.X > 15)
+                    {
+                        this->mPosition.X = this->mPosition.X - (this->mVelocity.Y * ((float)deltaTime/17.f) * 0.5f);
+                    }
+                    else if (this->mPosition.X < 14)
+                    {
+                        this->mPosition.X = this->mPosition.X + (this->mVelocity.Y * ((float)deltaTime/17.f) * 0.5f);
+                    }
+                    else if (this->mPosition.X < 15)
+                    {
+                        this->mPosition.X = this->mPosition.X + (this->mVelocity.Y * ((float)deltaTime/17.f) * 0.5f);
+                    }
+                    if (this->mPosition.Y > 45)
+                    {
+                        this->mStage = 0;
+                    }
+                    this->mPosition = this->mPosition - (this->mVelocity * ((float)deltaTime/17.f) * 0.1f);
+                    this->mTimer += ((float)deltaTime/17.f)*2.f;
+                    if (this->mPosition.Y < 37)
+                    {
+                        this->mStage = 2;
+                    }
                 }
                 break;
             case 2:
-                this->mPosition = this->mPosition + (this->mVelocity * ((float)deltaTime/17.f) * 0.1f);
-                    this->mTimer += ((float)deltaTime/17.f)*2.f;
-                if (this->mPosition.Y > 43)
+                if (this->mAttackDatas[this->mCurrentAttack].GetAttackType() == BossAttackData::AttackType::Cone)
                 {
-                    this->mStage = 1;
+                    this->mPosition = this->mPosition + (this->mVelocity * ((float)deltaTime/17.f) * 0.f);
+                    if (this->mPosition.Y < 62)
+                    {
+                        this->mPosition = this->mPosition + (this->mVelocity * ((float)deltaTime/17.f) * 0.5f);
+                    }
+                    this->mTimer += ((float)deltaTime/17.f)*2.f;
+                    if (this->mPosition.Y > 56)
+                    {
+                        this->mStage = 1;
+                    }
+                }
+                else if (this->mAttackDatas[this->mCurrentAttack].GetAttackType() == BossAttackData::AttackType::Straight)
+                {
+                    this->mPosition.X = this->mPosition.X + (this->mVelocity.Y * ((float)deltaTime/17.f) * 0.5f);
+                    this->mTimer += ((float)deltaTime/17.f)*2.f;
+                    printf("2: %f\n", this->mPosition.X);
+                    if (this->mPosition.X > 40)
+                    {
+                        this->mStage = 1;
+                    }
+                }
+                else
+                {
+                    if (this->mPosition.X > 16)
+                    {
+                        this->mPosition.X = this->mPosition.X - (this->mVelocity.Y * ((float)deltaTime/17.f) * 0.5f);
+                    }
+                    else if (this->mPosition.X < 14)
+                    {
+                        this->mPosition.X = this->mPosition.X + (this->mVelocity.Y * ((float)deltaTime/17.f) * 0.5f);
+                    }
+                    else if (this->mPosition.X < 15 || this->mPosition.X > 15)
+                    {
+                        this->mPosition.X = 15;
+                    }
+                    this->mPosition = this->mPosition + (this->mVelocity * ((float)deltaTime/17.f) * 0.1f);
+                    this->mTimer += ((float)deltaTime/17.f)*2.f;
+                    if (this->mPosition.Y > 43)
+                    {
+                        this->mStage = 1;
+                    }
                 }
                 break;
         }
@@ -85,7 +169,7 @@ std::vector<Bullet> Boss::SpawnBullets()
     if (this->mStage == 1 || this->mStage == 2)
     {
         BossAttackData currentAttack = this->mAttackDatas[this->mCurrentAttack];
-        if(currentAttack.GetAttackType() == BossAttackData::AttackType::Straight && this->mTimer > currentAttack.GetTiming()/(currentAttack.GetStrength()+1)*this->mCurrentIterator)
+        if(currentAttack.GetAttackType() == BossAttackData::AttackType::Straight && this->mTimer > currentAttack.GetTiming()/currentAttack.GetStrength()*this->mCurrentIterator)
         {
             this->mCurrentIterator++;
             Vector2f position = Vector2f(this->mPosition.X, this->mPosition.Y);

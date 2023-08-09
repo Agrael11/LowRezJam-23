@@ -283,7 +283,7 @@ bool GameScene::Update(double delta)
 
 bool GameScene::UpdateBossfight(double delta)
 {
-    if (this->mFirstPlay)
+    if (this->mFirstPlay && false)
     {
         Logger::Log(Logger::Fatal, "Skipping stage 0 on start.");
         this->mCurrentLevel = 0;
