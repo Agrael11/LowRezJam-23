@@ -51,7 +51,8 @@
             "binaryDir": "${sourceDir}/build/${presetName}",
             "cacheVariables": {
                 "CMAKE_TOOLCHAIN_FILE": "/home/tachi/emsdk/upstream/emscripten/cmake/Modules/Platform/Emscripten.cmake",
-                "CMAKE_INSTALL_PREFIX": "${sourceDir}/out/install/${presetName}"
+                "CMAKE_INSTALL_PREFIX": "${sourceDir}/out/install/${presetName}",
+                "CMAKE_COMPILER_FLAGS": "-g"
             }
         }
     ],
@@ -99,7 +100,7 @@
             "configuration": "Debug"
         },
         {
-            "name": "Emscripten-debug",
+            "name": "Emscripten-release",
             "displayName": "Emscripten Javascript - Release",
             "configurePreset": "Emscripten",
             "configuration": "Release"
