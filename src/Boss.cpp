@@ -72,7 +72,6 @@ void Boss::Update(double deltaTime)
                 {
                     this->mPosition.X = this->mPosition.X - (this->mVelocity.Y * ((float)deltaTime/17.f) * 0.5f);
                     this->mTimer += ((float)deltaTime/17.f)*2.f;
-                    printf("1: %f\n", this->mPosition.X);
                     if (this->mPosition.X < -8)
                     {
                         this->mStage = 2;
@@ -126,7 +125,6 @@ void Boss::Update(double deltaTime)
                 {
                     this->mPosition.X = this->mPosition.X + (this->mVelocity.Y * ((float)deltaTime/17.f) * 0.5f);
                     this->mTimer += ((float)deltaTime/17.f)*2.f;
-                    printf("2: %f\n", this->mPosition.X);
                     if (this->mPosition.X > 40)
                     {
                         this->mStage = 1;
@@ -199,7 +197,6 @@ std::vector<Bullet> Boss::SpawnBullets()
             position.X += 15;
             for (float i = -30; i <= 35; i+=60.f/(currentAttack.GetStrength()-1))
             {
-                printf("%f\n", i);
                 bullets.push_back(Bullet(position, Vector2f(i/30.f,-0.5f), false, currentAttack.GetBulletType()));
             }
             Engine::Helper::Logger::Log(Engine::Helper::Logger::Info, Engine::Helper::string_format("Now attacking in pattern: %s", this->mAttackDatas[this->mCurrentAttack].ToString(false).c_str()));

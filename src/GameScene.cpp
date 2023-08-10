@@ -78,7 +78,7 @@ void GameScene::LoadContent(Engine::Rendering::Renderer& renderer)
     TextureManager::LoadTexture("Enemies", "Assets/Enemies.png", renderer);
     TextureManager::LoadTexture("Life", "Assets/Life.png", renderer);
     TextureManager::LoadTexture("Bosses", "Assets/Bosses.png", renderer);
-    TextureManager::LoadTexture("LevelUp", "Assets/levelUp.png", renderer);
+    TextureManager::LoadTexture("LevelUp", "Assets/LevelUp.png", renderer);
     TextureManager::LoadTexture("Failed", "Assets/Failed.png", renderer);
     TextureManager::LoadTexture("GameOver", "Assets/GameOver.png", renderer);
     TextureManager::LoadTexture("Start", "Assets/Start.png", renderer);
@@ -435,6 +435,7 @@ bool GameScene::UpdateLevel(double delta)
         }
         else
         {
+            this->mScreenTimer = 0;
             this->mLevelStage = LevelStage::Transition;
             bool clear = true;
             for (auto& enemy : this->mEnemies)
@@ -504,7 +505,7 @@ bool GameScene::UpdateLevel(double delta)
 
 bool GameScene::UpdateTransition(double delta)
 {
-    this->mScreenTimer += delta/16.f;
+    this->mScreenTimer += (float)(delta/16.);
     if (this->mScreenTimer >= 10)
     {
         this->mCurrentLevel = this->mNextLevel;
@@ -513,6 +514,7 @@ bool GameScene::UpdateTransition(double delta)
     {
         this->mLevelStage = LevelStage::Bossfight;
         this->mScreenTimer = 0.f;
+        this->mScreenToShot = -1;
         this->mTimerStatus = 0;
         this->mTargetTimer = 0;
         this->mEnemies.clear();
@@ -608,7 +610,7 @@ void GameScene::DrawUI(double delta, Engine::Rendering::Renderer& renderer)
         image.SetColorMod(tempColor);
         renderer.DrawSprite(image, destination);;
     }
-    if (this->mScreenToShot == 1)
+    else if (this->mScreenToShot == 1)
     {
         destination.X = 0;
         destination.Y = 0;
@@ -619,7 +621,7 @@ void GameScene::DrawUI(double delta, Engine::Rendering::Renderer& renderer)
         image.SetColorMod(tempColor);
         renderer.DrawSprite(image, destination);;
     }
-    if (this->mScreenToShot == 5)
+    else if (this->mScreenToShot == 5)
     {
         destination.X = 0;
         destination.Y = 0;
@@ -632,7 +634,7 @@ void GameScene::DrawUI(double delta, Engine::Rendering::Renderer& renderer)
         image.SetColorMod(tempColor);
         renderer.DrawSprite(image, destination);
     }
-    if (this->mScreenToShot == 6)
+    else if (this->mScreenToShot == 6) //DEAR LORD THIS WAS KILLING MY EMSCRIPTEN BUILD AND I HAVE NO IDEA HOW I FIXED THIS CASE. DON'T TOUCH IT!
     {
         destination.X = 0;
         destination.Y = 0;
@@ -641,13 +643,13 @@ void GameScene::DrawUI(double delta, Engine::Rendering::Renderer& renderer)
         Sprite image = SpriteManager::GetSprite("Transition");
         float timer = (float)(this->mScreenTimer)/10.f;
         if (timer > 1.f) timer = 2.f - timer;
-        Colorf tempColor(2.f,2.f,2.f,1.f*timer);
+        Colorf tempColor(2.f,2.f,2.f,timer);
         image.SetColorMod(tempColor);
         renderer.DrawSprite(image, destination);;
         image = SpriteManager::GetSprite("Level_Up");
-        tempColor = Colorf(2.f,2.f,2.f,1.f*timer);
+        tempColor = Colorf(1.f,1.f,1.f,timer);
         image.SetColorMod(tempColor);
-        renderer.DrawSprite(image, destination);;
+        renderer.DrawSprite(image, destination);
     }
 }
 
