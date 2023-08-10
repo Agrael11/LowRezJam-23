@@ -1,3 +1,0 @@
-/mnt/c/Users/olive/source/repos/LowRezJam 23/build/Emscripten/CMakeFiles/LRJ23_Space_Shooter.dir
-/mnt/c/Users/olive/source/repos/LowRezJam 23/build/Emscripten/CMakeFiles/edit_cache.dir
-/mnt/c/Users/olive/source/repos/LowRezJam 23/build/Emscripten/CMakeFiles/rebuild_cache.dir
