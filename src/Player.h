@@ -25,7 +25,7 @@ class Player
         Bullet SpawnBullet();
         Engine::Math::Vector2f GetPosition();
         Engine::Math::Rectangle GetRectangle();
-        int GetHealth();
-        void SetHealth(int health);
-        int Hurt(int amount);
+        float GetHealth();
+        void SetHealth(float health);
+        float Hurt(float amount);
 };

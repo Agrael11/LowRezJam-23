@@ -307,21 +307,7 @@ bool GameScene::Update(double delta)
             collisionRectnagle = mPlayer.GetRectangle();
             if (collisionRectnagle.Intersects(bulletRectnagle))
             {
-                int hp = this->mPlayer.Hurt(10);
-                if (hp <= 0)
-                {
-                    this->mPlayer.SetHealth(100);
-                    Logger::Log(Logger::Fatal, "YOU DIED");
-                    Logger::Log(Logger::Fatal, "YOU MAY COLLECT YOUR SOULS ON PLACE YOU DIED AFTER YOU RESPAWN ON BONFIRE");
-                    Logger::Log(Logger::Fatal, "wait... that is darksouls");
-                    this->mLives--;
-                    if (this->mLives < 0)
-                    {
-                        this->mLives=3;
-                        Logger::Log(Logger::Fatal, "Lies don't really work now. RESET TO 3");
-                    }
-                    //TODO: remove life
-                }
+                HurtPlayer(10);
                 this->mBullets[i].Destroy();
             }
         }
@@ -372,21 +358,7 @@ bool GameScene::UpdateBossfight(double delta)
             this->mLevelStage = LevelStage::Level;
             this->mTimerStatus = 0;
             Logger::Log(Logger::Fatal, "Moving to Stage 1 - Level.");
-            int hp = this->mPlayer.GetHealth();
-            hp += 50;
-            if (hp > 100)
-            {
-                if (this->mLives > 5)
-                {
-                    hp = 100;
-                }
-                else
-                {
-                    hp -= 100;
-                    this->mLives += 1;
-                }
-                this->mPlayer.SetHealth(hp);
-            }
+            this->HealPlayer(50);
         }
         else
         {
@@ -453,6 +425,8 @@ bool GameScene::UpdateLevel(double delta)
             else
             {
                 this->mScreenToShot = 5;
+                
+                this->HurtPlayer(50);
                 if (this->mCurrentLevel > 0)
                 {
                     this->mNextLevel--;
@@ -473,7 +447,7 @@ bool GameScene::UpdateLevel(double delta)
             {
                 this->mEnemies[i].Destroy(2);
                 this->mEnemies.erase(this->mEnemies.begin()+i);
-                this->mPlayer.Hurt(10);
+                this->HurtPlayer(10);
                 continue;
             }
             
@@ -665,6 +639,53 @@ void GameScene::Shoot()
     this->mBullets.push_back(this->mPlayer.SpawnBullet());
     this->mStarted = true;
 }
+
+bool GameScene::HealPlayer(float amount)
+{
+    float hp = this->mPlayer.GetHealth();
+    hp += amount;
+    if (hp > 100.f)
+    {
+        hp -= 100.f;
+        if (this->mLives < 5)
+        {
+            this->mLives++;
+        }
+        this->mVisualPlayerHealth = (double)hp;
+        this->mPlayer.SetHealth(hp);
+        return true;
+    }
+
+    this->mPlayer.SetHealth(hp);
+    return false;
+}
+
+bool GameScene::HurtPlayer(float amount)
+{
+    float hp = this->mPlayer.GetHealth();
+    hp -= amount;
+    if (hp < 0.f)
+    {
+        hp += 100.f;
+        Logger::Log(Logger::Fatal, "YOU DIED");
+        Logger::Log(Logger::Fatal, "YOU MAY COLLECT YOUR SOULS ON PLACE YOU DIED AFTER YOU RESPAWN ON BONFIRE");
+        Logger::Log(Logger::Fatal, "wait... that is darksouls");
+        this->mLives--;
+        if (this->mLives < 0)
+        {
+            hp = 100.f;
+            this->mLives=3;
+            Logger::Log(Logger::Fatal, "Lies don't really work now. RESET TO 3");
+            //TODO: Do Game Over
+        }
+        this->mPlayer.SetHealth(hp);
+        return true;
+    }
+
+    this->mPlayer.SetHealth(hp);
+    return false;
+}
+
 
 void GameScene::KeyDown(SDL_KeyboardEvent e)
 {

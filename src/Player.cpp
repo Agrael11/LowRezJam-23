@@ -52,20 +52,20 @@ Rectangle Player::GetRectangle()
     return Rectangle((int)this->mPosition.X, (int)this->mPosition.Y, PLAYER_WIDTH, PLAYER_HEIGHT);
 }
 
-int Player::GetHealth()
+float Player::GetHealth()
 {
-    return (int)this->mHealth;
+    return this->mHealth;
 }
 
-void Player::SetHealth(int health)
+void Player::SetHealth(float health)
 {
     this->mHealth = (float)health;
     if (this->mHealth > 100) this->mHealth = 100;
     if (this->mHealth < 0) this->mHealth = 0;
 }
 
-int Player::Hurt(int amount)
+float Player::Hurt(float amount)
 {
-    this->SetHealth((int)(this->mHealth - amount));
-    return (int)this->mHealth;
+    this->SetHealth(this->mHealth - amount);
+    return this->mHealth;
 }

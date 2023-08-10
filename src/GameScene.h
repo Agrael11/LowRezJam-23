@@ -66,6 +66,8 @@ class GameScene
         void DrawGame(double delta, Engine::Rendering::Renderer& renderer);
         void DrawUI(double delta, Engine::Rendering::Renderer& renderer);
         void Shoot();
+        bool HealPlayer(float amount);
+        bool HurtPlayer(float amount);
 
         void KeyUp(SDL_KeyboardEvent e);
         void KeyDown(SDL_KeyboardEvent e);
