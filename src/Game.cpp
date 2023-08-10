@@ -111,9 +111,9 @@ void Game::HandleEvent(SDL_Event e)
     {
         this->MouseButtonDown(e.button);
     }
-    else if (e.type == SDL_MOUSEBUTTONDOWN)
+    else if (e.type == SDL_MOUSEBUTTONUP)
     {
-        this->MouseButtonDown(e.button);
+        this->MouseButtonUp(e.button);
     }
     else if (e.type == SDL_MOUSEWHEEL)
     {

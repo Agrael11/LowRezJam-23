@@ -26,7 +26,17 @@ class GameScene
         double mVisualProgress;
         double mVisualPlayerHealth;
         double mVisualPlayerHealthSpeed;
-        
+        double mScreenTimer;
+        int mScreenToShot;
+        bool mStarted;
+        bool mShooting;
+        float mShootingTimer;
+        float mControlX;
+        bool mControllerX;
+        float mControlY;
+        bool mControllerY;
+        bool failedShown;
+
         bool mFirstPlay;
 
         Player mPlayer;
@@ -55,6 +65,7 @@ class GameScene
         void Draw(double delta, Engine::Rendering::Renderer& renderer);
         void DrawGame(double delta, Engine::Rendering::Renderer& renderer);
         void DrawUI(double delta, Engine::Rendering::Renderer& renderer);
+        void Shoot();
 
         void KeyUp(SDL_KeyboardEvent e);
         void KeyDown(SDL_KeyboardEvent e);

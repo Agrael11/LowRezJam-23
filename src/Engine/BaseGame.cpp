@@ -102,7 +102,7 @@ bool BaseGame::Load_OpenGL(int width, int height, std::string windowTitle)
     this->windowTitle = windowTitle;
     
     Logger::Log(Logger::Info, "Initializing SDL2..");
-        if( SDL_Init( SDL_INIT_VIDEO) < 0 )
+    if( SDL_Init( SDL_INIT_VIDEO) < 0 )
     {
         Logger::Log(Logger::Error, string_format("SDL could not initialize! SDL_Error: %s", SDL_GetError()));
         return false;

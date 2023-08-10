@@ -78,11 +78,12 @@ void GameScene::LoadContent(Engine::Rendering::Renderer& renderer)
     TextureManager::LoadTexture("Enemies", "Assets/Enemies.png", renderer);
     TextureManager::LoadTexture("Life", "Assets/Life.png", renderer);
     TextureManager::LoadTexture("Bosses", "Assets/Bosses.png", renderer);
+    TextureManager::LoadTexture("LevelUp", "Assets/levelUp.png", renderer);
+    TextureManager::LoadTexture("Failed", "Assets/Failed.png", renderer);
+    TextureManager::LoadTexture("GameOver", "Assets/GameOver.png", renderer);
+    TextureManager::LoadTexture("Start", "Assets/Start.png", renderer);
 
     //LOAD SPRITES
-    Sprite bg0Sprite;
-    Sprite bg1Sprite;
-    Sprite bg2Sprite;
     Sprite bulletSprite0;
     Sprite bulletSprite1;
     Sprite bulletSprite2;
@@ -91,11 +92,19 @@ void GameScene::LoadContent(Engine::Rendering::Renderer& renderer)
     Sprite enemyZigzag;
     Sprite enemyCircle;
     Sprite life;
-    Sprite boss0;
+    Sprite boss;
+    Sprite levelUp;
+    Sprite failed;
+    Sprite gameOver;
+    Sprite start;
 
-    bg0Sprite.Load(TextureManager::GetTexture("BG_1"), Rectangle(0,0,8,8), renderer);
-    bg1Sprite.Load(TextureManager::GetTexture("BG_1"), Rectangle(8,0,8,8), renderer);
-    bg2Sprite.Load(TextureManager::GetTexture("BG_1"), Rectangle(16,0,8,8), renderer);
+    for (int i = 0; i < 18; i++)
+    {
+        Sprite bgSprite;
+        bgSprite.Load(TextureManager::GetTexture("BG_1"), Rectangle((i%8)*8,(i/8)*8,8,8), renderer);
+        SpriteManager::AddSprite(string_format("BG_%d", i), bgSprite);
+    }
+
     bulletSprite0.Load(TextureManager::GetTexture("Bullets"), Rectangle(0, 0, BULLET_WIDTH, BULLET_HEIGHT), renderer);
     bulletSprite1.Load(TextureManager::GetTexture("Bullets"), Rectangle(BULLET_WIDTH, 0, BULLET_WIDTH, BULLET_HEIGHT), renderer);
     bulletSprite2.Load(TextureManager::GetTexture("Bullets"), Rectangle(BULLET_WIDTH*2, 0, BULLET_WIDTH, BULLET_HEIGHT), renderer);
@@ -104,11 +113,12 @@ void GameScene::LoadContent(Engine::Rendering::Renderer& renderer)
     enemyZigzag.Load(TextureManager::GetTexture("Enemies"), Rectangle(ENEMY_WIDTH, 0, ENEMY_WIDTH, ENEMY_HEIGHT), renderer);
     enemyCircle.Load(TextureManager::GetTexture("Enemies"), Rectangle(2*ENEMY_WIDTH, 0, ENEMY_WIDTH, ENEMY_HEIGHT), renderer);
     life.Load(TextureManager::GetTexture("Life"), Rectangle(0, 0, 4, 4), renderer);
-    boss0.Load(TextureManager::GetTexture("Bosses"), Rectangle(0, 0, BOSS_WEIGHT, BOSS_HEIGHT), renderer);
+    boss.Load(TextureManager::GetTexture("Bosses"), Rectangle(0, 0, BOSS_WEIGHT, BOSS_HEIGHT), renderer);
+    levelUp.Load(TextureManager::GetTexture("LevelUp"), Rectangle(0, 0, 64, 64), renderer);
+    failed.Load(TextureManager::GetTexture("Failed"), Rectangle(0, 0, 64, 64), renderer);
+    gameOver.Load(TextureManager::GetTexture("GameOver"), Rectangle(0, 0, 64, 64), renderer);
+    start.Load(TextureManager::GetTexture("Start"), renderer);
 
-    SpriteManager::AddSprite("BG_0", bg0Sprite);
-    SpriteManager::AddSprite("BG_1", bg1Sprite);
-    SpriteManager::AddSprite("BG_2", bg2Sprite);
     SpriteManager::AddSprite("Bullets_0", bulletSprite0);
     SpriteManager::AddSprite("Bullets_1", bulletSprite1);
     SpriteManager::AddSprite("Bullets_2", bulletSprite2);
@@ -117,10 +127,15 @@ void GameScene::LoadContent(Engine::Rendering::Renderer& renderer)
     SpriteManager::AddSprite("Enemy_Zigzag", enemyZigzag);
     SpriteManager::AddSprite("Enemy_Circle", enemyCircle);
     SpriteManager::AddSprite("Life", life);
-    SpriteManager::AddSprite("Boss_0", boss0);
+    SpriteManager::AddSprite("Boss_0", boss);
+    SpriteManager::AddSprite("Level_Up", levelUp);
+    SpriteManager::AddSprite("Failed", failed);
+    SpriteManager::AddSprite("Game_Over", gameOver);
+    SpriteManager::AddSprite("Start", start);
 
     //LOAD LEVELS
     LoadLevelFromFile("Assets/Level0.lvl");
+    LoadLevelFromFile("Assets/Level1.lvl");
 
     //TODO: DEBUG DATA
     Logger::Log(Logger::Fatal, "Beta version, not complete yet!");
@@ -160,10 +175,61 @@ void GameScene::Reset()
         }
     }
     this->CurrentBoss.Recycle(0);
+    this->mScreenTimer = 0.;
+    this->mScreenToShot = 0;
+    this->mStarted = false;
+    this->mShooting = false;
+    this->mControlX = 0;
+    this->mControlY = 0;
+    this->mControllerX = false;
+    this->mControllerY = false;
+    this->failedShown = false;
 }
 
 bool GameScene::Update(double delta)
 {
+    if (this->mScreenToShot == 0)
+    {
+        if (this->mStarted == true)
+        {
+            mScreenTimer += delta/16.f;
+            if (this->mScreenTimer >= 10)
+            {
+                this->mScreenTimer = 0.0f;
+                this->mScreenToShot = -1;
+            }
+        }
+    }
+    if (this->mScreenToShot == 1)
+    {
+        mScreenTimer += delta/16.f;
+        if (this->mScreenTimer >= 50)
+        {
+            this->mScreenTimer = 0.0f;
+            this->mScreenToShot = -1;
+        }
+    }
+    else if (this->mScreenToShot == 1)
+    {
+        mScreenTimer += delta/16.f;
+    }
+
+    if (this->mShooting && this->mShootingTimer >= 10.f)
+    {
+        Shoot();
+        this->mShootingTimer = 0.f;
+    }
+    this->mShootingTimer += (float)delta/16.f;
+
+    this->mPlayer.Move(Vector2f(this->mControlX * 1.5f * (float)delta /16.f, this->mControlY * 1.5f * (float)delta /16.f));
+
+
+    if (!this->mStarted)
+    {
+        return true;
+    }
+
+
     switch (this->mLevelStage)
     {
         case LevelStage::Bossfight:
@@ -283,7 +349,7 @@ bool GameScene::Update(double delta)
 
 bool GameScene::UpdateBossfight(double delta)
 {
-    if (this->mFirstPlay && false)
+    if (this->mFirstPlay)
     {
         Logger::Log(Logger::Fatal, "Skipping stage 0 on start.");
         this->mCurrentLevel = 0;
@@ -298,7 +364,6 @@ bool GameScene::UpdateBossfight(double delta)
     {
         if (this->CurrentBoss.GetHealth() <= 0)
         {
-            this->mCurrentLevel = 0;
             this->mCurrentEnemy = 0;
             this->mTargetTimer = levels[this->mCurrentLevel].GetEnemySpawnInfo(this->mCurrentEnemy).GetStartTimer();
             this->mLevelStage = LevelStage::Level;
@@ -375,12 +440,19 @@ bool GameScene::UpdateLevel(double delta)
             }
             if (clear) 
             {
-                Logger::Log(Logger::Fatal, "Moving to Stage 2 - Transition - Level Cleared.");
-                Logger::Log(Logger::Fatal, "In Final Version moves to next level.");
+                this->mScreenToShot = 6;
+                if (this->mCurrentLevel < 10)
+                {
+                    this->mNextLevel++;
+                }
             }
             else
             {
-                Logger::Log(Logger::Fatal, "Moving to Stage 2 - Transition - Level Failed.");
+                this->mScreenToShot = 5;
+                if (this->mCurrentLevel > 0)
+                {
+                    this->mNextLevel--;
+                }
             }
         }
     }
@@ -406,6 +478,12 @@ bool GameScene::UpdateLevel(double delta)
                 this->mBullets.push_back(this->mEnemies[i].SpawnBullet());
             }
         }
+        if (this->mEnemies[i].IsDestroyed() == 2 && !this->failedShown)
+        {
+            this->failedShown = true;
+            this->mScreenToShot = 1;
+            this->mScreenTimer = 0.f;
+        }
     }
 
     double perc = this->mTimerStatus / (levels[this->mCurrentLevel].GetLevelLength()+250);
@@ -423,10 +501,21 @@ bool GameScene::UpdateLevel(double delta)
 
 bool GameScene::UpdateTransition(double delta)
 {
-    Logger::Log(Logger::Fatal, "Moving to Stage 0 - Boss. Transition not done yet. Normally would move to next level");
-    this->mEnemies.clear();
-    //TODO: Move to next level
-    this->mLevelStage = LevelStage::Bossfight;
+    this->mScreenTimer += delta/16.f;
+    if (this->mScreenTimer >= 10)
+    {
+        this->mCurrentLevel = this->mNextLevel;
+    }
+    if (this->mScreenTimer > 20)
+    {
+        this->mLevelStage = LevelStage::Bossfight;
+        this->mScreenTimer = 0.f;
+        this->mTimerStatus = 0;
+        this->mTargetTimer = 0;
+        this->mEnemies.clear();
+        this->failedShown = false;
+        this->CurrentBoss.Recycle(levels[this->mCurrentLevel].GetBossId());
+    }
     return true;
 }
 
@@ -444,7 +533,7 @@ void GameScene::DrawGame(double delta, Engine::Rendering::Renderer& renderer)
     {
         for (int y = 0; y < 9; y++)
         {
-            int tile = this->mBgTiles[(8-y)*8+x];
+            int tile = levels[this->mCurrentLevel].GetBackground()*3 + this->mBgTiles[(8-y)*8+x];
             destination.X = x*8;
             destination.Y = 64-y*8-(int)this->mScroll;
             renderer.DrawSprite(SpriteManager::GetSprite(string_format("BG_%d",tile).c_str()), destination);
@@ -504,26 +593,111 @@ void GameScene::DrawUI(double delta, Engine::Rendering::Renderer& renderer)
         destination.Height = 4;
         renderer.DrawSprite(SpriteManager::GetSprite("Life"), destination);
     }
+
+    if (this->mScreenToShot == 0)
+    {
+        destination.X = 0;
+        destination.Y = 0;
+        destination.Width = 64;
+        destination.Height = 64;
+        Sprite image = SpriteManager::GetSprite("Start");
+        Colorf tempColor(1.f,1.f,1.f,1.f-(float)(this->mScreenTimer)/10.f);
+        image.SetColorMod(tempColor);
+        renderer.DrawSprite(image, destination);;
+    }
+    if (this->mScreenToShot == 1)
+    {
+        printf("Error %f\n", this->mScreenTimer);
+        destination.X = 0;
+        destination.Y = 0;
+        destination.Width = 64;
+        destination.Height = 64;
+        Sprite image = SpriteManager::GetSprite("Failed");
+        Colorf tempColor(1.f,1.f,1.f,1.f-(float)(this->mScreenTimer)/90.f);
+        image.SetColorMod(tempColor);
+        renderer.DrawSprite(image, destination);;
+    }
+    if (this->mScreenToShot == 5)
+    {
+        destination.X = 0;
+        destination.Y = 0;
+        destination.Width = 64;
+        destination.Height = 64;
+        Sprite image = SpriteManager::GetSprite("Bullets_0");
+        float timer = (float)(this->mScreenTimer)/10.f;
+        if (timer > 1.f) timer = 2.f - timer;
+        Colorf tempColor = Colorf(2.f,2.f,2.f,1.f*timer);
+        image.SetColorMod(tempColor);
+        renderer.DrawSprite(image, destination);;
+        tempColor = Colorf(1.f,1.f,1.f,1.f);
+        image.SetColorMod(tempColor);
+    }
+    if (this->mScreenToShot == 6)
+    {
+        destination.X = 0;
+        destination.Y = 0;
+        destination.Width = 64;
+        destination.Height = 64;
+        Sprite image = SpriteManager::GetSprite("Bullets_0");
+        float timer = (float)(this->mScreenTimer)/10.f;
+        if (timer > 1.f) timer = 2.f - timer;
+        Colorf tempColor(2.f,2.f,2.f,1.f*timer);
+        image.SetColorMod(tempColor);
+        renderer.DrawSprite(image, destination);;
+        tempColor = Colorf(1.f,1.f,1.f,1.f);
+        image.SetColorMod(tempColor);
+        image = SpriteManager::GetSprite("Level_Up");
+        tempColor = Colorf(2.f,2.f,2.f,1.f*timer);
+        image.SetColorMod(tempColor);
+        renderer.DrawSprite(image, destination);;
+    }
 }
 
 
 
 
+void GameScene::Shoot()
+{
+    this->mBullets.push_back(this->mPlayer.SpawnBullet());
+    this->mStarted = true;
+}
+
 void GameScene::KeyDown(SDL_KeyboardEvent e)
 {
     switch (e.keysym.scancode)
     {
+        case SDL_SCANCODE_ESCAPE:
+            break;
+        case SDL_SCANCODE_RETURN:
+            break;  
         case SDL_SCANCODE_W:
         case SDL_SCANCODE_UP:
+            this->mControlY = 1;
+            this->mControllerX = false;
+            this->mControllerY = false;
             break;  
         case SDL_SCANCODE_S:
         case SDL_SCANCODE_DOWN:
+            this->mControlY = -1;
+            this->mControllerX = false;
+            this->mControllerY = false;
             break;
         case SDL_SCANCODE_A:
         case SDL_SCANCODE_LEFT:
+            this->mControlX = -1;
+            this->mControllerX = false;
+            this->mControllerY = false;
             break;
         case SDL_SCANCODE_D:
         case SDL_SCANCODE_RIGHT:
+            this->mControlX = 1;
+            this->mControllerX = false;
+            this->mControllerY = false;
+            break;
+        case SDL_SCANCODE_SPACE:
+            this->mShooting = true;
+            this->mControllerX = false;
+            this->mControllerY = false;
             break;
         default:
             break;
@@ -532,6 +706,30 @@ void GameScene::KeyDown(SDL_KeyboardEvent e)
 
 void GameScene::KeyUp(SDL_KeyboardEvent e)
 {
+    switch (e.keysym.scancode)
+    {
+        case SDL_SCANCODE_ESCAPE:
+            break;
+        case SDL_SCANCODE_RETURN:
+            break;  
+        case SDL_SCANCODE_W:
+        case SDL_SCANCODE_UP:
+        case SDL_SCANCODE_S:
+        case SDL_SCANCODE_DOWN:
+            this->mControlY = 0;
+            break;
+        case SDL_SCANCODE_A:
+        case SDL_SCANCODE_LEFT:
+        case SDL_SCANCODE_D:
+        case SDL_SCANCODE_RIGHT:
+            this->mControlX = 0;
+            break;
+        case SDL_SCANCODE_SPACE:
+            this->mShooting = false;
+            break;
+        default:
+            break;
+    }
 }
 
 void GameScene::MouseMove(SDL_MouseMotionEvent e)
@@ -543,33 +741,58 @@ void GameScene::MouseButtonDown(SDL_MouseButtonEvent e)
 {
     if (e.button == SDL_BUTTON_LEFT)
     {
-        this->mBullets.push_back(this->mPlayer.SpawnBullet());
+        this->mShooting = true;
     }
 }
 
 void GameScene::MouseButtonUp(SDL_MouseButtonEvent e)
 {
+    this->mShooting = false;
 }
 
 void GameScene::ControllerAxisMove(SDL_ControllerAxisEvent e)
-{   
+{
     if (e.axis == SDL_CONTROLLER_AXIS_LEFTX) 
     {
-        if (e.value < -DEATH_ZONE || e.value > DEATH_ZONE)
+        if (e.value > -DEATH_ZONE && e.value < DEATH_ZONE)
         {
-            printf("%d, %d\n", e.axis, e.value);
+            if (this->mControllerX)
+            {
+                this->mControlX = 0;
+                this->mControllerX = false;
+            }
         }
-        if (e.value < -DEATH_ZONE) ;
-        else if (e.value > DEATH_ZONE) ;
+        if (e.value < -DEATH_ZONE) 
+        {
+            this->mControlX = ((float)e.value) / 32767;
+            this->mControllerX = true;
+        }
+        else if (e.value > DEATH_ZONE)
+        {
+            this->mControlX = ((float)e.value) / 32767;
+            this->mControllerX = true;
+        }
     }
     else if (e.axis == SDL_CONTROLLER_AXIS_LEFTY)
     {
-        if (e.value < -DEATH_ZONE || e.value > DEATH_ZONE)
+        if (e.value > -DEATH_ZONE && e.value < DEATH_ZONE)
         {
-            printf("%d, %d\n", e.axis, e.value);
+            if (this->mControllerY)
+            {
+                this->mControlY = 0;
+                this->mControllerY = false;
+            }
         }
-        if (e.value < -DEATH_ZONE) ;
-        else if (e.value > DEATH_ZONE) ;
+        if (e.value < -DEATH_ZONE)
+        {
+            this->mControlY = -((float)e.value) / 32767;
+            this->mControllerY = true;
+        }
+        else if (e.value > DEATH_ZONE)
+        {
+            this->mControlY = -((float)e.value) / 32767;
+            this->mControllerY = true;
+        }
     }
 }
 
@@ -582,12 +805,27 @@ void GameScene::ControllerButtonDown(SDL_ControllerButtonEvent e)
         case SDL_CONTROLLER_BUTTON_START:
             break;  
         case SDL_CONTROLLER_BUTTON_DPAD_UP:
+            this->mControlY = 1.f;
+            this->mControllerX = false;
+            this->mControllerY = false;
             break;  
         case SDL_CONTROLLER_BUTTON_DPAD_DOWN:
+            this->mControlY = -1.f;
+            this->mControllerX = false;
+            this->mControllerY = false;
             break;
         case SDL_CONTROLLER_BUTTON_DPAD_LEFT:
+            this->mControlX = -1.f;
+            this->mControllerX = false;
+            this->mControllerY = false;
             break;
         case SDL_CONTROLLER_BUTTON_DPAD_RIGHT:
+            this->mControlX = 1.f;
+            this->mControllerX = false;
+            this->mControllerY = false;
+            break;
+        case SDL_CONTROLLER_BUTTON_A:
+            this->mShooting = true;
             break;
         default:
             break;
@@ -595,5 +833,25 @@ void GameScene::ControllerButtonDown(SDL_ControllerButtonEvent e)
 }
 
 void GameScene::ControllerButtonUp(SDL_ControllerButtonEvent e)
-{
+{    
+    switch (e.button)
+    {
+        case SDL_CONTROLLER_BUTTON_BACK:
+            break;
+        case SDL_CONTROLLER_BUTTON_START:
+            break;  
+        case SDL_CONTROLLER_BUTTON_DPAD_UP:
+        case SDL_CONTROLLER_BUTTON_DPAD_DOWN:
+            this->mControlY = 0;
+            break;
+        case SDL_CONTROLLER_BUTTON_DPAD_LEFT:
+        case SDL_CONTROLLER_BUTTON_DPAD_RIGHT:
+            this->mControlX = 0;
+            break;
+        case SDL_CONTROLLER_BUTTON_A:
+            this->mShooting = false;
+            break;
+        default:
+            break;
+    }
 }
