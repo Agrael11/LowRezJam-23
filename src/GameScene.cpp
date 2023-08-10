@@ -87,6 +87,7 @@ void GameScene::LoadContent(Engine::Rendering::Renderer& renderer)
     Sprite bulletSprite0;
     Sprite bulletSprite1;
     Sprite bulletSprite2;
+    Sprite transition;
     Sprite shipStraight;
     Sprite enemyStraight;
     Sprite enemyZigzag;
@@ -108,6 +109,7 @@ void GameScene::LoadContent(Engine::Rendering::Renderer& renderer)
     bulletSprite0.Load(TextureManager::GetTexture("Bullets"), Rectangle(0, 0, BULLET_WIDTH, BULLET_HEIGHT), renderer);
     bulletSprite1.Load(TextureManager::GetTexture("Bullets"), Rectangle(BULLET_WIDTH, 0, BULLET_WIDTH, BULLET_HEIGHT), renderer);
     bulletSprite2.Load(TextureManager::GetTexture("Bullets"), Rectangle(BULLET_WIDTH*2, 0, BULLET_WIDTH, BULLET_HEIGHT), renderer);
+    transition.Load(TextureManager::GetTexture("Bullets"), Rectangle(0, 0, BULLET_WIDTH, BULLET_HEIGHT), renderer);
     shipStraight.Load(TextureManager::GetTexture("Ship"), Rectangle(0, 0, PLAYER_WIDTH, PLAYER_HEIGHT), renderer);
     enemyStraight.Load(TextureManager::GetTexture("Enemies"), Rectangle(0, 0, ENEMY_WIDTH, ENEMY_HEIGHT), renderer);
     enemyZigzag.Load(TextureManager::GetTexture("Enemies"), Rectangle(ENEMY_WIDTH, 0, ENEMY_WIDTH, ENEMY_HEIGHT), renderer);
@@ -132,6 +134,7 @@ void GameScene::LoadContent(Engine::Rendering::Renderer& renderer)
     SpriteManager::AddSprite("Failed", failed);
     SpriteManager::AddSprite("Game_Over", gameOver);
     SpriteManager::AddSprite("Start", start);
+    SpriteManager::AddSprite("Transition", transition);
 
     //LOAD LEVELS
     LoadLevelFromFile("Assets/Level0.lvl");
@@ -140,7 +143,7 @@ void GameScene::LoadContent(Engine::Rendering::Renderer& renderer)
     //TODO: DEBUG DATA
     Logger::Log(Logger::Fatal, "Beta version, not complete yet!");
     Logger::Log(Logger::Fatal, "Starting at LEVEL 0 instead of LEVEL 5!");
-    Logger::Log(Logger::Fatal, "MEOW!");
+    Logger::Log(Logger::Fatal, "Test Version 5!");
     Logger::Log(Logger::Fatal, "All ingame informations are shown as FATAL ERRORS currently, not on screen!");
 }
 
@@ -607,7 +610,6 @@ void GameScene::DrawUI(double delta, Engine::Rendering::Renderer& renderer)
     }
     if (this->mScreenToShot == 1)
     {
-        printf("Error %f\n", this->mScreenTimer);
         destination.X = 0;
         destination.Y = 0;
         destination.Width = 64;
@@ -623,14 +625,12 @@ void GameScene::DrawUI(double delta, Engine::Rendering::Renderer& renderer)
         destination.Y = 0;
         destination.Width = 64;
         destination.Height = 64;
-        Sprite image = SpriteManager::GetSprite("Bullets_0");
+        Sprite image = SpriteManager::GetSprite("Transition");
         float timer = (float)(this->mScreenTimer)/10.f;
         if (timer > 1.f) timer = 2.f - timer;
         Colorf tempColor = Colorf(2.f,2.f,2.f,1.f*timer);
         image.SetColorMod(tempColor);
-        renderer.DrawSprite(image, destination);;
-        tempColor = Colorf(1.f,1.f,1.f,1.f);
-        image.SetColorMod(tempColor);
+        renderer.DrawSprite(image, destination);
     }
     if (this->mScreenToShot == 6)
     {
@@ -638,14 +638,12 @@ void GameScene::DrawUI(double delta, Engine::Rendering::Renderer& renderer)
         destination.Y = 0;
         destination.Width = 64;
         destination.Height = 64;
-        Sprite image = SpriteManager::GetSprite("Bullets_0");
+        Sprite image = SpriteManager::GetSprite("Transition");
         float timer = (float)(this->mScreenTimer)/10.f;
         if (timer > 1.f) timer = 2.f - timer;
         Colorf tempColor(2.f,2.f,2.f,1.f*timer);
         image.SetColorMod(tempColor);
         renderer.DrawSprite(image, destination);;
-        Colorf tempColor2(1.f,1.f,1.f,1.f);
-        image.SetColorMod(tempColor2);
         image = SpriteManager::GetSprite("Level_Up");
         tempColor = Colorf(2.f,2.f,2.f,1.f*timer);
         image.SetColorMod(tempColor);
