@@ -217,7 +217,7 @@ bool GameScene::Update(double delta)
         mScreenTimer += delta/16.f;
     }
 
-    if (this->mShooting && this->mShootingTimer >= 10.f)
+    if (this->mShooting && this->mShootingTimer >= 25.f)
     {
         Shoot();
         this->mShootingTimer = 0.f;
@@ -702,6 +702,7 @@ void GameScene::KeyDown(SDL_KeyboardEvent e)
             this->mShooting = true;
             this->mControllerX = false;
             this->mControllerY = false;
+            this->mShootingTimer = 100.f;
             break;
         default:
             break;
@@ -750,6 +751,7 @@ void GameScene::MouseButtonDown(SDL_MouseButtonEvent e)
     if (e.button == SDL_BUTTON_LEFT)
     {
         this->mShooting = true;
+        this->mShootingTimer = 100.f;
     }
 }
 
@@ -834,6 +836,7 @@ void GameScene::ControllerButtonDown(SDL_ControllerButtonEvent e)
             break;
         case SDL_CONTROLLER_BUTTON_A:
             this->mShooting = true;
+            this->mShootingTimer = 100.f;
             break;
         default:
             break;
