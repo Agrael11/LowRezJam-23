@@ -630,7 +630,11 @@ void GameScene::DrawUI(double delta, Engine::Rendering::Renderer& renderer)
         Sprite image = SpriteManager::GetSprite("Transition");
         float timer = (float)(this->mScreenTimer)/10.f;
         if (timer > 1.f) timer = 2.f - timer;
-        Colorf tempColor = Colorf(2.f,2.f,2.f,1.f*timer);
+        Colorf tempColor(2.f,2.f,2.f,timer);
+        image.SetColorMod(tempColor);
+        renderer.DrawSprite(image, destination);;
+        image = SpriteManager::GetSprite("Failed");
+        tempColor = Colorf(1.f,1.f,1.f,timer);
         image.SetColorMod(tempColor);
         renderer.DrawSprite(image, destination);
     }
@@ -672,25 +676,25 @@ void GameScene::KeyDown(SDL_KeyboardEvent e)
             break;  
         case SDL_SCANCODE_W:
         case SDL_SCANCODE_UP:
-            this->mControlY = 1;
+            this->mControlY += 1;
             this->mControllerX = false;
             this->mControllerY = false;
             break;  
         case SDL_SCANCODE_S:
         case SDL_SCANCODE_DOWN:
-            this->mControlY = -1;
+            this->mControlY += -1;
             this->mControllerX = false;
             this->mControllerY = false;
             break;
         case SDL_SCANCODE_A:
         case SDL_SCANCODE_LEFT:
-            this->mControlX = -1;
+            this->mControlX += -1;
             this->mControllerX = false;
             this->mControllerY = false;
             break;
         case SDL_SCANCODE_D:
         case SDL_SCANCODE_RIGHT:
-            this->mControlX = 1;
+            this->mControlX += 1;
             this->mControllerX = false;
             this->mControllerY = false;
             break;
@@ -714,15 +718,19 @@ void GameScene::KeyUp(SDL_KeyboardEvent e)
             break;  
         case SDL_SCANCODE_W:
         case SDL_SCANCODE_UP:
+            this->mControlY -= 1;
+            break;  
         case SDL_SCANCODE_S:
         case SDL_SCANCODE_DOWN:
-            this->mControlY = 0;
+            this->mControlY -= -1;
             break;
         case SDL_SCANCODE_A:
         case SDL_SCANCODE_LEFT:
+            this->mControlX -= -1;
+            break;
         case SDL_SCANCODE_D:
         case SDL_SCANCODE_RIGHT:
-            this->mControlX = 0;
+            this->mControlX -= 1;
             break;
         case SDL_SCANCODE_SPACE:
             this->mShooting = false;
@@ -805,22 +813,22 @@ void GameScene::ControllerButtonDown(SDL_ControllerButtonEvent e)
         case SDL_CONTROLLER_BUTTON_START:
             break;  
         case SDL_CONTROLLER_BUTTON_DPAD_UP:
-            this->mControlY = 1.f;
+            this->mControlY += 1.f;
             this->mControllerX = false;
             this->mControllerY = false;
             break;  
         case SDL_CONTROLLER_BUTTON_DPAD_DOWN:
-            this->mControlY = -1.f;
+            this->mControlY += -1.f;
             this->mControllerX = false;
             this->mControllerY = false;
             break;
         case SDL_CONTROLLER_BUTTON_DPAD_LEFT:
-            this->mControlX = -1.f;
+            this->mControlX += -1.f;
             this->mControllerX = false;
             this->mControllerY = false;
             break;
         case SDL_CONTROLLER_BUTTON_DPAD_RIGHT:
-            this->mControlX = 1.f;
+            this->mControlX += 1.f;
             this->mControllerX = false;
             this->mControllerY = false;
             break;
@@ -841,12 +849,16 @@ void GameScene::ControllerButtonUp(SDL_ControllerButtonEvent e)
         case SDL_CONTROLLER_BUTTON_START:
             break;  
         case SDL_CONTROLLER_BUTTON_DPAD_UP:
+            this->mControlY -= 1.f;
+            break;  
         case SDL_CONTROLLER_BUTTON_DPAD_DOWN:
-            this->mControlY = 0;
+            this->mControlY -= -1.f;
             break;
         case SDL_CONTROLLER_BUTTON_DPAD_LEFT:
+            this->mControlX -= -1.f;
+            break;
         case SDL_CONTROLLER_BUTTON_DPAD_RIGHT:
-            this->mControlX = 0;
+            this->mControlX -= 1.f;
             break;
         case SDL_CONTROLLER_BUTTON_A:
             this->mShooting = false;
