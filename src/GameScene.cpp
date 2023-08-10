@@ -644,8 +644,8 @@ void GameScene::DrawUI(double delta, Engine::Rendering::Renderer& renderer)
         Colorf tempColor(2.f,2.f,2.f,1.f*timer);
         image.SetColorMod(tempColor);
         renderer.DrawSprite(image, destination);;
-        tempColor = Colorf(1.f,1.f,1.f,1.f);
-        image.SetColorMod(tempColor);
+        Colorf tempColor2(1.f,1.f,1.f,1.f);
+        image.SetColorMod(tempColor2);
         image = SpriteManager::GetSprite("Level_Up");
         tempColor = Colorf(2.f,2.f,2.f,1.f*timer);
         image.SetColorMod(tempColor);
