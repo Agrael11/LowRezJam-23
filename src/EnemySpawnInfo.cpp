@@ -59,7 +59,7 @@ std::string EnemySpawnInfo::ToString(bool simple)
     }
     else
     {
-        return Engine::Helper::string_format("BulletType: %d; StarTimer: %.2f; StartPosition %.2fx%.2f; Direction: %.2fx%.2f",
+        return Engine::Helper::string_format("BulletType: %d; StartTimer: %.2f; StartPosition %.2fx%.2f; Direction: %.2fx%.2f",
         static_cast<int>(this->mBulletType), this->mStartTimer, this->mStartPosition.X, this->mStartPosition.Y, this->mDirection.X, this->mDirection.Y);
     }
 }
