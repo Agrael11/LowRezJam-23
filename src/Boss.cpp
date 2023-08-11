@@ -162,15 +162,19 @@ Vector2f Boss::GetPosition()
     return this->mPosition;
 }
 
-std::vector<Bullet> Boss::SpawnBullets()
+std::vector<Bullet> Boss::SpawnBullets(Engine::Math::Vector2f playerPosition)
 {
+    Vector2f pos = GetPosition();
+    pos.X = playerPosition.X - pos.X;
+    pos.Y = playerPosition.Y - pos.Y;
+    int angle = (int)(atan2(-pos.X, pos.Y) / MathHelper::TAUf * 360);
     std::vector<Bullet> bullets;
     if (this->mStage == 1 || this->mStage == 2)
     {
         BossAttackData currentAttack = this->mAttackDatas[this->mCurrentAttack];
         if(currentAttack.GetAttackType() == BossAttackData::AttackType::Straight && this->mTimer > currentAttack.GetTiming()/currentAttack.GetStrength()*this->mCurrentIterator)
         {
-            SoundManager::GetSound("BossStraight").Play(0);
+            SoundManager::GetSound("BossStraight").Play(0,angle,60, 64);
             this->mCurrentIterator++;
             Vector2f position = Vector2f(this->mPosition.X, this->mPosition.Y);
             position.X += 15;
@@ -179,7 +183,7 @@ std::vector<Bullet> Boss::SpawnBullets()
         }
         else if (currentAttack.GetAttackType() == BossAttackData::AttackType::Circle && this->mTimer > currentAttack.GetTiming()/2.f && this->mCurrentIterator == 0)
         {
-            SoundManager::GetSound("BossCircle").Play(0);
+            SoundManager::GetSound("BossCircle").Play(0,angle,30, 64);
             this->mCurrentIterator++;
             Vector2f position = Vector2f(this->mPosition.X, this->mPosition.Y);
             position.X += 15;
@@ -195,7 +199,7 @@ std::vector<Bullet> Boss::SpawnBullets()
         }
         else if (currentAttack.GetAttackType() == BossAttackData::AttackType::Cone && this->mTimer > currentAttack.GetTiming()/2.f && this->mCurrentIterator == 0)
         {
-            SoundManager::GetSound("BossCone").Play(0);
+            SoundManager::GetSound("BossCone").Play(0,angle,30, 64);
             this->mCurrentIterator++;
             Vector2f position = Vector2f(this->mPosition.X, this->mPosition.Y);
             position.X += 15;

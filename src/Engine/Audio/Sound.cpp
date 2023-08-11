@@ -37,7 +37,34 @@ bool Sound::Play(int loops, int volume)
         Logger::Log(Logger::Error, string_format("Failed to play sound! SDL_Mixer Error: %s", Mix_GetError()));
         return false;
     }
-    Mix_Volume(channel, volume);
+    Mix_VolumeChunk(this->mChunk, volume);
+    this->mChannel = channel;
+    return true;
+}
+
+bool Sound::Play(int loops, int angle, int distance)
+{
+    int channel = Mix_PlayChannel(-1, this->mChunk, loops);
+    if (channel == -1)
+    {
+        Logger::Log(Logger::Error, string_format("Failed to play sound! SDL_Mixer Error: %s", Mix_GetError()));
+        return false;
+    }
+    Mix_SetPosition(channel, angle, distance);
+    this->mChannel = channel;
+    return true;
+}
+
+bool Sound::Play(int loops, int angle, int distance, int volume)
+{
+    int channel = Mix_PlayChannel(-1, this->mChunk, loops);
+    if (channel == -1)
+    {
+        Logger::Log(Logger::Error, string_format("Failed to play sound! SDL_Mixer Error: %s", Mix_GetError()));
+        return false;
+    }
+    Mix_SetPosition(channel, angle, distance);
+    Mix_VolumeChunk(this->mChunk, volume);
     this->mChannel = channel;
     return true;
 }

@@ -34,7 +34,7 @@ class Boss
         
         void Draw(Engine::Rendering::Renderer &renderer);
         void Update(double deltaTime);
-        std::vector<Bullet> SpawnBullets();
+        std::vector<Bullet> SpawnBullets(Engine::Math::Vector2f playerPosition);
         Engine::Math::Vector2f GetPosition();
         Engine::Math::Rectangle GetRectangle();
         int GetHealth();

@@ -98,9 +98,9 @@ void GameScene::LoadContent(Engine::Rendering::Renderer& renderer)
     SoundManager::LoadSound("LevelDown", "Assets/Sounds/LevelDown.wav");
     SoundManager::LoadSound("LevelFail", "Assets/Sounds/LevelFail.wav");
     SoundManager::LoadSound("LevelFinished", "Assets/Sounds/LevelFinished.wav");
-    SoundManager::LoadMusic("BGM_0", "Assets/Musics/Level0.wav");
-    SoundManager::LoadMusic("BGM_10", "Assets/Musics/Space.wav");
-    SoundManager::LoadMusic("BGM_M", "Assets/Musics/BGMusic.wav");
+    SoundManager::LoadMusic("BGM_0", "Assets/Musics/Level0.ogg");
+    SoundManager::LoadMusic("BGM_10", "Assets/Musics/Space.ogg");
+    SoundManager::LoadMusic("BGM_M", "Assets/Musics/BGMusic.ogg");
 
     //LOAD SPRITES
     Sprite bulletSprite0;
@@ -155,15 +155,15 @@ void GameScene::LoadContent(Engine::Rendering::Renderer& renderer)
     SpriteManager::AddSprite("Start", start);
     SpriteManager::AddSprite("Transition", transition);
 
-    //LOAD LEVELS
-    LoadLevelFromFile("Assets/Level0.lvl");
-    LoadLevelFromFile("Assets/Level1.lvl");
+    for (int i = 0; i <= 10; i++)
+    {
+        LoadLevelFromFile(string_format("Assets/Level%d.lvl",i).c_str());
+    }
 
     //TODO: DEBUG DATA
     Logger::Log(Logger::Fatal, "Beta version, not complete yet!");
-    Logger::Log(Logger::Fatal, "Starting at LEVEL 0 instead of LEVEL 5!");
-    Logger::Log(Logger::Fatal, "Test Version 5!");
-    Logger::Log(Logger::Fatal, "All ingame informations are shown as FATAL ERRORS currently, not on screen!");
+    Logger::Log(Logger::Fatal, "Test Version 8!");
+    Logger::Log(Logger::Fatal, "Some ingame informations are shown as FATAL ERRORS currently, not on screen!");
 }
 
 int GameScene::GenerateBgPart()
@@ -179,8 +179,8 @@ void GameScene::Reset()
     this->mScroll = 0.f;
     this->mScrollSpeed = 6.f;
     
-    this->mCurrentLevel = 0; //TODO: Start with correct level
-    this->mNextLevel = 0;
+    this->mCurrentLevel = 5; //TODO: Start with correct level
+    this->mNextLevel = 5;
     this->mTimerStatus = 0;
     this->mLevelStage = LevelStage::Bossfight;
     this->mVisualProgress = 0;
@@ -196,7 +196,6 @@ void GameScene::Reset()
             this->mBgTiles.push_back(this->GenerateBgPart());
         }
     }
-    this->CurrentBoss.Recycle(0);
     this->mScreenTimer = 0.;
     this->mScreenToShot = 0;
     this->mStarted = false;
@@ -301,7 +300,7 @@ bool GameScene::Update(double delta)
                         collisionRectnagle = this->mEnemies[j].GetRectangle();
                         if (collisionRectnagle.Intersects(bulletRectnagle))
                         {
-                            SoundManager::GetSound("Hit").Play(0);
+                            SoundManager::GetSound("Hit").Play(0,50);
                             //TODO: Do stuff;
                             this->mEnemies[j].Destroy(1);
                             this->mBullets[i].Destroy();
@@ -315,7 +314,7 @@ bool GameScene::Update(double delta)
                 collisionRectnagle = this->CurrentBoss.GetRectangle();
                 if (collisionRectnagle.Intersects(bulletRectnagle))
                 {
-                    SoundManager::GetSound("Hit").Play(0);
+                    SoundManager::GetSound("Hit").Play(0,10);
                     this->CurrentBoss.SetHealth(this->CurrentBoss.GetHealth()-2);
                     this->mBullets[i].Destroy();
                 }
@@ -360,7 +359,6 @@ bool GameScene::UpdateBossfight(double delta)
     if (this->mFirstPlay)
     {
         Logger::Log(Logger::Fatal, "Skipping stage 0 on start.");
-        this->mCurrentLevel = 0;
         this->mCurrentEnemy = 0;
         this->mTargetTimer = levels[this->mCurrentLevel].GetEnemySpawnInfo(this->mCurrentEnemy).GetStartTimer();
         this->mLevelStage = LevelStage::Level;
@@ -372,7 +370,11 @@ bool GameScene::UpdateBossfight(double delta)
     {
         if (this->CurrentBoss.GetHealth() <= 0)
         {
-            SoundManager::GetSound("BossDeath").Play(0);
+            Vector2f pos = this->CurrentBoss.GetPosition();
+            pos.X = this->mPlayer.GetPosition().X - pos.X;
+            pos.Y = this->mPlayer.GetPosition().Y - pos.Y;
+            int angle = (int)(atan2(-pos.X, pos.Y) / MathHelper::TAUf * 360);
+            SoundManager::GetSound("BossDeath").Play(0, angle, 30, 80);
             this->mCurrentEnemy = 0;
             this->mTargetTimer = levels[this->mCurrentLevel].GetEnemySpawnInfo(this->mCurrentEnemy).GetStartTimer();
             this->mLevelStage = LevelStage::Level;
@@ -412,8 +414,15 @@ bool GameScene::UpdateBossfight(double delta)
             {
                 this->mVisualProgress = perc;
             }
+
+            Rectangle playerRectangle = this->mPlayer.GetRectangle();
+            if (this->CurrentBoss.GetRectangle().Intersects(playerRectangle))
+            {
+                this->HurtPlayer(5);
+                this->CurrentBoss.SetHealth(this->CurrentBoss.GetHealth()-1);
+            }
             
-            std::vector<Bullet> spawnedBullets = this->CurrentBoss.SpawnBullets();
+            std::vector<Bullet> spawnedBullets = this->CurrentBoss.SpawnBullets(this->mPlayer.GetPosition());
             this->mBullets.insert(this->mBullets.end(), std::make_move_iterator(spawnedBullets.begin()), std::make_move_iterator(spawnedBullets.end()));
             spawnedBullets.clear();
         }
@@ -456,7 +465,15 @@ bool GameScene::UpdateLevel(double delta)
                 this->mScreenToShot = 6;
                 if (this->mCurrentLevel < 10)
                 {
-                    SoundManager::GetSound("LevelFinished").Play(0);
+                    if (this->mCurrentLevel == 0)
+                    {
+                        SoundManager::GetMusic("BGM_M").Play(-1, true, 0);
+                    }
+                    if (this->mCurrentLevel == 9)
+                    {
+                        SoundManager::GetMusic("BGM_10").Play(-1, true, 0);
+                    }
+                    SoundManager::GetSound("LevelFinished").Play(0,128);
                     this->mNextLevel++;
                     return true;
                 }
@@ -464,8 +481,15 @@ bool GameScene::UpdateLevel(double delta)
             else
             {
                 this->mScreenToShot = 5;
-                
-                SoundManager::GetSound("LevelDown").Play(0);
+                if (this->mCurrentLevel == 1)
+                {
+                    SoundManager::GetMusic("BGM_0").Play(-1, true, 3000);
+                }
+                if (this->mCurrentLevel == 10)
+                {
+                    SoundManager::GetMusic("BGM_M").Play(-1, true, 3000);
+                }
+                SoundManager::GetSound("LevelDown").Play(0,64);
                 this->HurtPlayer(50);
                 if (this->mCurrentLevel > 0)
                 {
@@ -495,7 +519,7 @@ bool GameScene::UpdateLevel(double delta)
             Rectangle playerRectangle = this->mPlayer.GetRectangle();
             if (this->mEnemies[i].GetRectangle().Intersects(playerRectangle))
             {
-                SoundManager::GetSound("Hit").Play(0);
+                SoundManager::GetSound("Hit").Play(0,50);
                 this->mEnemies[i].Destroy(1);
                 this->HurtPlayer(10);
                 continue;
@@ -504,16 +528,24 @@ bool GameScene::UpdateLevel(double delta)
             if (this->mEnemies[i].TimerCheck()) 
             {
                 Bullet bullet = this->mEnemies[i].SpawnBullet();
+                Vector2f pos = bullet.GetPosition();
+                Vector2f playerPos = this->mPlayer.GetPosition();
+                int dist = (int)(pos.Distance(playerPos)*2);
+                if (dist > 200) dist = 200;
+                if (dist < 20) dist = 20;
+                pos.X = this->mPlayer.GetPosition().X - pos.X;
+                pos.Y = this->mPlayer.GetPosition().Y - pos.Y;
+                int angle = (int)(atan2(-pos.X, pos.Y) / MathHelper::TAUf * 360);
                 switch (bullet.GetBulletType())
                 {
                     case Bullet::Type::Circling:
-                        SoundManager::GetSound("EnemyCircle").Play(0);
+                        SoundManager::GetSound("EnemyCircle").Play(0, angle, dist, 50);
                         break;
                     case Bullet::Type::Zigzag:
-                        SoundManager::GetSound("EnemyZigzag").Play(0);
+                        SoundManager::GetSound("EnemyZigzag").Play(0, angle, dist, 50);
                         break;
                     case Bullet::Type::Static:
-                        SoundManager::GetSound("EnemyStraight").Play(0);
+                        SoundManager::GetSound("EnemyStraight").Play(0, angle, dist, 50);
                         break;
                 }
                 this->mBullets.push_back(bullet);
@@ -521,7 +553,7 @@ bool GameScene::UpdateLevel(double delta)
         }
         if (this->mEnemies[i].IsDestroyed() == 2 && !this->failedShown)
         {
-            SoundManager::GetSound("LevelFail").Play(0);
+            SoundManager::GetSound("LevelFail").Play(0,64);
             this->failedShown = true;
             this->mScreenToShot = 1;
             this->mScreenTimer = 0.f;
@@ -707,7 +739,7 @@ void GameScene::Shoot()
     }
     this->mStarted = true;
     this->mShootingTimer = 0.f;
-    SoundManager::GetSound("PlayerShot").Play(0);
+    SoundManager::GetSound("PlayerShot").Play(0, 20);
 }
 
 bool GameScene::HealPlayer(float amount)
@@ -736,10 +768,9 @@ bool GameScene::HurtPlayer(float amount)
     hp -= amount;
     if (hp < 0.f)
     {
+        SoundManager::GetSound("PlayerDeath").Play(0,64);
         hp += 100.f;
         Logger::Log(Logger::Fatal, "YOU DIED");
-        Logger::Log(Logger::Fatal, "YOU MAY COLLECT YOUR SOULS ON PLACE YOU DIED AFTER YOU RESPAWN ON BONFIRE");
-        Logger::Log(Logger::Fatal, "wait... that is darksouls");
         this->mLives--;
         if (this->mLives < 0)
         {

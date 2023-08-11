@@ -109,20 +109,18 @@ int main(int argc, char *args[])
     Logger::OverrideFile = true;
 
     Game tempGame = Game(512, 512, "LRJ_23");
+        game = &tempGame;
+        game->Init();
+        game->LoadContent();
 
-    game = &tempGame;
-    game->Init();
-    game->LoadContent();
-
-#ifdef EMSCRIPTEN
-    emscripten_set_main_loop(Run, 0, 1);
-#else
-    while (quit == false)
-    {
-        Run();
-    }
-#endif
-    game->Unload();
-
+    #ifdef EMSCRIPTEN
+        emscripten_set_main_loop(Run, 0, 1);
+    #else
+        while (quit == false)
+        {
+            Run();
+        }
+    #endif
+        game->Unload();
     return 0;
 }
