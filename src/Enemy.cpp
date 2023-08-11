@@ -34,9 +34,11 @@ Enemy::Enemy(EnemySpawnInfo spawnInfo)
 
 void Enemy::Draw(Engine::Rendering::Renderer &renderer)
 {
-    Engine::Rendering::Sprite sprite = SpriteManager::GetSprite(this->mBulletType == Bullet::Type::Static ? "Enemy_Straight" : (this->mBulletType == Bullet::Type::Zigzag ? "Enemy_Zigzag" : "Enemy_Circle"));
+    Engine::Rendering::Sprite sprite= Engine::Rendering::Sprite(SpriteManager::GetSprite(this->mBulletType == Bullet::Type::Static ? "Enemy_Straight" : (this->mBulletType == Bullet::Type::Zigzag ? "Enemy_Zigzag" : "Enemy_Circle")));
     if (this->mDestroyed == 0)
     {
+        Colorf color(1.f, 1.f, 1.f, 1.f);
+        sprite.SetColorMod(color);
         Rectangle dest = Rectangle((int)this->mPosition.X, (int)this->mPosition.Y, ENEMY_WIDTH, ENEMY_HEIGHT);
         renderer.DrawSprite(sprite , dest);
     }
@@ -46,7 +48,10 @@ void Enemy::Draw(Engine::Rendering::Renderer &renderer)
         Colorf color(1.f, 1.f, 1.f, (float)(this->mAnimating/30.));
         sprite.SetColorMod(color);
         renderer.DrawSprite(sprite , dest);
-        color = Colorf(1.f, 1.f, 1.f, 1.f);
+        color.R = 1.f;
+        color.G = 1.f;
+        color.B = 1.f;
+        color.A = 1.f;
         sprite.SetColorMod(color);
     }
 }
