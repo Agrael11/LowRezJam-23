@@ -6,7 +6,7 @@ using namespace std;
 using namespace Engine::Rendering;
 using namespace Engine::Helper;
 
-std::unordered_map<std::string, Engine::Rendering::Sprite> mSprites;
+static std::unordered_map<std::string, Engine::Rendering::Sprite> mSprites;
 
 SpriteManager::SpriteManager()
 {
