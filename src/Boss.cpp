@@ -28,7 +28,7 @@ void Boss::Recycle(int bossType)
     this->mTimer = 0;
     this->mMaxTime = 100;
     this->mStage = 0;
-    this->mAttackDatas = BossAttackData::LoadDatasFromFile("Assets/BossAttackDatas_0.bad");
+    this->mAttackDatas = BossAttackData::LoadDatasFromFile("Assets/BossAttackPatterns/BossAttackDatas_0.bad");
     this->mCurrentAttack = 0;
     this->mCurrentIterator = 0;
 }

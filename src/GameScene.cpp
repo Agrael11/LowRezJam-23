@@ -74,16 +74,16 @@ void GameScene::Init()
 void GameScene::LoadContent(Engine::Rendering::Renderer& renderer)
 {
     //LOAD TEXTURES
-    TextureManager::LoadTexture("BG_1", "Assets/BG_1.png", renderer);
-    TextureManager::LoadTexture("Bullets", "Assets/Bullets.png", renderer);
-    TextureManager::LoadTexture("Ship", "Assets/Ship.png", renderer);
-    TextureManager::LoadTexture("Enemies", "Assets/Enemies.png", renderer);
-    TextureManager::LoadTexture("Life", "Assets/Life.png", renderer);
-    TextureManager::LoadTexture("Bosses", "Assets/Bosses.png", renderer);
-    TextureManager::LoadTexture("LevelUp", "Assets/LevelUp.png", renderer);
-    TextureManager::LoadTexture("Failed", "Assets/Failed.png", renderer);
-    TextureManager::LoadTexture("GameOver", "Assets/GameOver.png", renderer);
-    TextureManager::LoadTexture("Start", "Assets/Start.png", renderer);
+    TextureManager::LoadTexture("BG_1", "Assets/Textures/BG_1.png", renderer);
+    TextureManager::LoadTexture("Bullets", "Assets/Textures/Bullets.png", renderer);
+    TextureManager::LoadTexture("Ship", "Assets/Textures/Ship.png", renderer);
+    TextureManager::LoadTexture("Enemies", "Assets/Textures/Enemies.png", renderer);
+    TextureManager::LoadTexture("Life", "Assets/Textures/Life.png", renderer);
+    TextureManager::LoadTexture("Bosses", "Assets/Textures/Bosses.png", renderer);
+    TextureManager::LoadTexture("LevelUp", "Assets/Textures/LevelUp.png", renderer);
+    TextureManager::LoadTexture("Failed", "Assets/Textures/Failed.png", renderer);
+    TextureManager::LoadTexture("GameOver", "Assets/Textures/GameOver.png", renderer);
+    TextureManager::LoadTexture("Start", "Assets/Textures/Start.png", renderer);
     SoundManager::LoadSound("BossCone", "Assets/Sounds/BossC.wav");
     SoundManager::LoadSound("BossCircle", "Assets/Sounds/BossF.wav");
     SoundManager::LoadSound("BossStraight", "Assets/Sounds/BossS.wav");
@@ -157,7 +157,7 @@ void GameScene::LoadContent(Engine::Rendering::Renderer& renderer)
 
     for (int i = 0; i <= 10; i++)
     {
-        LoadLevelFromFile(string_format("Assets/Level%d.lvl",i).c_str());
+        LoadLevelFromFile(string_format("Assets/Levels/Level%d.lvl",i).c_str());
     }
 
     //TODO: DEBUG DATA

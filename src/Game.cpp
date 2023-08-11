@@ -40,9 +40,9 @@ void Game::Init()
 void Game::LoadContent()
 {
     #if USE_OPENGL_ES
-    this->mShader.LoadFromFile("Assets/mainShader_es.vert", "Assets/mainShader_es.frag");
+    this->mShader.LoadFromFile("Assets/Shaders/mainShader_es.vert", "Assets/Shaders/mainShader_es.frag");
     #else
-    this->mShader.LoadFromFile("Assets/mainShader.vert", "Assets/mainShader.frag");
+    this->mShader.LoadFromFile("Assets/Shaders/mainShader.vert", "Assets/Shaders/mainShader.frag");
     #endif
 
     this->mainRenderTexture.Create(64, 64, this->renderer);
