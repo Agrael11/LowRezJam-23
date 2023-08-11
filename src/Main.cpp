@@ -108,7 +108,7 @@ int main(int argc, char *args[])
     Logger::SaveTimedCopy = false;
     Logger::OverrideFile = true;
 
-    Game tempGame = Game(512, 512, "Test Window");
+    Game tempGame = Game(512, 512, "LRJ_23");
 
     game = &tempGame;
     game->Init();
