@@ -371,7 +371,8 @@ bool GameScene::UpdateBossfight(double delta)
                     float yi = ((BOSS_HEIGHT / 2 * i)- BOSS_WEIGHT/2) * y;
                     Vector2f newSpawnPosition(startPosition.X + xi,startPosition.Y + yi);
                     int type = rand()%3;
-                    Enemy enemy(static_cast<Bullet::Type>(type), newSpawnPosition, Vector2f(-(x+i*2), -(y+i*2)));
+                    float speed = ((1+(1-i))*2.f);
+                    Enemy enemy(static_cast<Bullet::Type>(type), newSpawnPosition, Vector2f(-(x*speed), -(y*speed)));
                     enemy.Destroy(3);
                     this->mEnemies.push_back(enemy);
                 }
@@ -456,6 +457,11 @@ bool GameScene::UpdateLevel(double delta)
     
     for (int i = (int)this->mEnemies.size()-1; i >= 0; i--)
     {
+        if (this->mEnemies[i].IsDestroyed() == 4)
+        {
+            this->mEnemies.erase(this->mEnemies.begin() + i);
+            continue;
+        }
         if (this->mEnemies[i].IsDestroyed() == 0 || this->mEnemies[i].IsDestroyed() == 3 || this->mEnemies[i].GetAnimating() > 0)
         {
             this->mEnemies[i].Update(delta);

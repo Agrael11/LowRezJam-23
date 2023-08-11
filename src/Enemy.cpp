@@ -79,6 +79,12 @@ void Enemy::Update(double deltaTime)
     else if (this->mDestroyed == 3)
     {
         this->mPosition = this->mPosition + (this->mVelocity * ((float)deltaTime/17.f) * 0.5f);
+        bool outOfBounds = false;
+        outOfBounds |= this->mVelocity.X < 0 && this->mPosition.X < -ENEMY_WIDTH;
+        outOfBounds |= this->mVelocity.X > 0 && this->mPosition.X > 64+ENEMY_WIDTH;
+        outOfBounds |= this->mVelocity.Y < 0 && this->mPosition.Y < -ENEMY_HEIGHT;
+        outOfBounds |= this->mVelocity.Y > 0 && this->mPosition.Y > 64+ENEMY_HEIGHT;
+        if (outOfBounds) this->Destroy(4);
     }
 }
 
