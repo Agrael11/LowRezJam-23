@@ -17,6 +17,7 @@ Enemy::Enemy(Bullet::Type type, Vector2f startPosition, Vector2f velocity)
     this->mDestroyed = 0;
     this->mTimer = 0;
     this->mMaxTime = 100;
+    this->mAnimating = 0;
 }
 
 Enemy::Enemy(EnemySpawnInfo spawnInfo)
@@ -28,14 +29,25 @@ Enemy::Enemy(EnemySpawnInfo spawnInfo)
     this->mDestroyed = 0;
     this->mTimer = 0;
     this->mMaxTime = 100;
+    this->mAnimating = 0;
 }
 
 void Enemy::Draw(Engine::Rendering::Renderer &renderer)
 {
+    Engine::Rendering::Sprite sprite = SpriteManager::GetSprite(this->mBulletType == Bullet::Type::Static ? "Enemy_Straight" : (this->mBulletType == Bullet::Type::Zigzag ? "Enemy_Zigzag" : "Enemy_Circle"));
     if (this->mDestroyed == 0)
     {
         Rectangle dest = Rectangle((int)this->mPosition.X, (int)this->mPosition.Y, ENEMY_WIDTH, ENEMY_HEIGHT);
-        renderer.DrawSprite(SpriteManager::GetSprite(this->mBulletType == Bullet::Type::Static ? "Enemy_Straight" : (this->mBulletType == Bullet::Type::Zigzag ? "Enemy_Zigzag" : "Enemy_Circle")) , dest);
+        renderer.DrawSprite(sprite , dest);
+    }
+    else if (this->mAnimating > 0)
+    {
+        Rectangle dest = Rectangle((int)this->mPosition.X, (int)this->mPosition.Y, ENEMY_WIDTH, ENEMY_HEIGHT);
+        Colorf color(1.f, 1.f, 1.f, (float)(this->mAnimating/30.));
+        sprite.SetColorMod(color);
+        renderer.DrawSprite(sprite , dest);
+        color = Colorf(1.f, 1.f, 1.f, 1.f);
+        sprite.SetColorMod(color);
     }
 }
 
@@ -45,10 +57,19 @@ void Enemy::Update(double deltaTime)
     {
         this->mPosition = this->mPosition + (this->mVelocity * ((float)deltaTime/17.f) * 0.5f);
 
-        if (this->mPosition.X < -64 || this->mPosition.X > 128 ||
-        this->mPosition.Y < -64 || this->mPosition.Y > 128) this->Destroy(2);
+        bool outOfBounds = false;
+        outOfBounds |= this->mVelocity.X < 0 && this->mPosition.X < -ENEMY_WIDTH;
+        outOfBounds |= this->mVelocity.X > 0 && this->mPosition.X > 64+ENEMY_WIDTH;
+        outOfBounds |= this->mVelocity.Y < 0 && this->mPosition.Y < -ENEMY_HEIGHT;
+        outOfBounds |= this->mVelocity.Y > 0 && this->mPosition.Y > 64+ENEMY_HEIGHT;
+        if (outOfBounds) this->Destroy(2);
 
         this->mTimer += ((float)deltaTime/17.f)*2.f;
+    }
+    else if (this->mAnimating > 0)
+    {
+        this->mAnimating -= deltaTime/8.f;
+                this->mPosition = this->mPosition + (this->mVelocity * ((float)deltaTime/17.f) * 0.5f);
     }
 }
 
@@ -104,4 +125,10 @@ int Enemy::IsDestroyed()
 void Enemy::Destroy(int type)
 {
     this->mDestroyed = type;
+    this->mAnimating = 30;
+}
+
+double Enemy::GetAnimating()
+{
+    return this->mAnimating;
 }

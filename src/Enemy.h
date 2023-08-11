@@ -21,6 +21,7 @@ class Enemy
         Bullet::Type mBulletType;
         float mTimer;
         float mMaxTime;
+        double mAnimating;
 
     public:
         Enemy(Bullet::Type type, Engine::Math::Vector2f startPosition, Engine::Math::Vector2f velocity);
@@ -37,4 +38,5 @@ class Enemy
         Bullet::Type GetType();
         int IsDestroyed();
         void Destroy(int type);
+        double GetAnimating();
 };

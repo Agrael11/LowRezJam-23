@@ -378,7 +378,6 @@ bool GameScene::UpdateBossfight(double delta)
             this->mBullets.insert(this->mBullets.end(), std::make_move_iterator(spawnedBullets.begin()), std::make_move_iterator(spawnedBullets.end()));
             spawnedBullets.clear();
         }
-        //TODO: BOSS FIGHT!!;
     }
 
     return true;
@@ -438,15 +437,17 @@ bool GameScene::UpdateLevel(double delta)
     
     for (int i = (int)this->mEnemies.size()-1; i >= 0; i--)
     {
-        if (this->mEnemies[i].IsDestroyed() == 0)
+        if (this->mEnemies[i].IsDestroyed() == 0 || this->mEnemies[i].GetAnimating() > 0)
         {
             this->mEnemies[i].Update(delta);
+        }
+        if (this->mEnemies[i].IsDestroyed() == 0)
+        {
 
             Rectangle playerRectangle = this->mPlayer.GetRectangle();
             if (this->mEnemies[i].GetRectangle().Intersects(playerRectangle))
             {
-                this->mEnemies[i].Destroy(2);
-                this->mEnemies.erase(this->mEnemies.begin()+i);
+                this->mEnemies[i].Destroy(1);
                 this->HurtPlayer(10);
                 continue;
             }
