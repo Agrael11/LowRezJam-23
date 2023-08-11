@@ -39,6 +39,7 @@
 #include "Engine/Math/Vector2f.h"
 #include "Levels.h"
 #include "BossAttackData.h"
+#include "Engine/Math/MathHelper.h"
 
 using namespace Engine::Rendering;
 using namespace Engine::Helper;
@@ -357,6 +358,24 @@ bool GameScene::UpdateBossfight(double delta)
             this->mTargetTimer = levels[this->mCurrentLevel].GetEnemySpawnInfo(this->mCurrentEnemy).GetStartTimer();
             this->mLevelStage = LevelStage::Level;
             this->mTimerStatus = 0;
+            Vector2f startPosition(this->CurrentBoss.GetPosition());
+            startPosition.X += BOSS_WEIGHT / 2 + ENEMY_WIDTH / 2;
+            startPosition.Y += BOSS_HEIGHT / 2 + ENEMY_WIDTH / 2;
+            for (float i = 0; i < 1.f; i+=0.1f)
+            {
+                for (float j = 0; j < MathHelper::TAUf; j+=MathHelper::TAUf/40.f)
+                {
+                    float x = cos(j+(i*MathHelper::TAUf));
+                    float y = -sin(j+(i*MathHelper::TAUf));
+                    float xi = ((BOSS_WEIGHT / 2 * i) - BOSS_WEIGHT/2) * x;
+                    float yi = ((BOSS_HEIGHT / 2 * i)- BOSS_WEIGHT/2) * y;
+                    Vector2f newSpawnPosition(startPosition.X + xi,startPosition.Y + yi);
+                    int type = rand()%3;
+                    Enemy enemy(static_cast<Bullet::Type>(type), newSpawnPosition, Vector2f(-(x+i*2), -(y+i*2)));
+                    enemy.Destroy(2);
+                    this->mEnemies.push_back(enemy);
+                }
+            }
             Logger::Log(Logger::Fatal, "Moving to Stage 1 - Level.");
             this->HealPlayer(50);
         }
