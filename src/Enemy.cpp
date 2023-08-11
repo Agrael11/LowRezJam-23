@@ -35,14 +35,14 @@ Enemy::Enemy(EnemySpawnInfo spawnInfo)
 void Enemy::Draw(Engine::Rendering::Renderer &renderer)
 {
     Engine::Rendering::Sprite sprite= Engine::Rendering::Sprite(SpriteManager::GetSprite(this->mBulletType == Bullet::Type::Static ? "Enemy_Straight" : (this->mBulletType == Bullet::Type::Zigzag ? "Enemy_Zigzag" : "Enemy_Circle")));
-    if (this->mDestroyed == 0)
+    if (this->mDestroyed == 0 || this->mDestroyed == 3)
     {
         Colorf color(1.f, 1.f, 1.f, 1.f);
         sprite.SetColorMod(color);
         Rectangle dest = Rectangle((int)this->mPosition.X, (int)this->mPosition.Y, ENEMY_WIDTH, ENEMY_HEIGHT);
         renderer.DrawSprite(sprite , dest);
     }
-    else if (this->mAnimating > 0)
+    else if (this->mAnimating > 0 && this->mDestroyed == 1)
     {
         Rectangle dest = Rectangle((int)this->mPosition.X, (int)this->mPosition.Y, ENEMY_WIDTH, ENEMY_HEIGHT);
         Colorf color(1.f, 1.f, 1.f, (float)(this->mAnimating/30.));
@@ -73,8 +73,12 @@ void Enemy::Update(double deltaTime)
     }
     else if (this->mAnimating > 0)
     {
-        this->mAnimating -= deltaTime/8.f;
-                this->mPosition = this->mPosition + (this->mVelocity * ((float)deltaTime/17.f) * 0.5f);
+        this->mAnimating -= deltaTime/4.f;
+        this->mPosition = this->mPosition + (this->mVelocity * ((float)deltaTime/17.f) * 0.5f);
+    }
+    else if (this->mDestroyed == 3)
+    {
+        this->mPosition = this->mPosition + (this->mVelocity * ((float)deltaTime/17.f) * 0.5f);
     }
 }
 

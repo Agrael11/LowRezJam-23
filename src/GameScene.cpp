@@ -226,6 +226,7 @@ bool GameScene::Update(double delta)
     this->mShootingTimer += (float)delta/16.f;
 
     this->mPlayer.Move(Vector2f(this->mControlX * 1.5f * (float)delta /16.f, this->mControlY * 1.5f * (float)delta /16.f));
+    this->mPlayer.Update(delta);
 
 
     if (!this->mStarted)
@@ -265,7 +266,6 @@ bool GameScene::Update(double delta)
         this->mScroll = 0;
     }
 
-    this->mPlayer.Update(delta);
 
 
     for (int i = (int)this->mBullets.size()-1; i >= 0; i--)
@@ -372,7 +372,7 @@ bool GameScene::UpdateBossfight(double delta)
                     Vector2f newSpawnPosition(startPosition.X + xi,startPosition.Y + yi);
                     int type = rand()%3;
                     Enemy enemy(static_cast<Bullet::Type>(type), newSpawnPosition, Vector2f(-(x+i*2), -(y+i*2)));
-                    enemy.Destroy(2);
+                    enemy.Destroy(3);
                     this->mEnemies.push_back(enemy);
                 }
             }
@@ -430,7 +430,7 @@ bool GameScene::UpdateLevel(double delta)
             bool clear = true;
             for (auto& enemy : this->mEnemies)
             {
-                clear &= (enemy.IsDestroyed() == 1);
+                clear &= (enemy.IsDestroyed() == 1 || enemy.IsDestroyed() == 3);
             }
             if (clear) 
             {
@@ -456,7 +456,7 @@ bool GameScene::UpdateLevel(double delta)
     
     for (int i = (int)this->mEnemies.size()-1; i >= 0; i--)
     {
-        if (this->mEnemies[i].IsDestroyed() == 0 || this->mEnemies[i].GetAnimating() > 0)
+        if (this->mEnemies[i].IsDestroyed() == 0 || this->mEnemies[i].IsDestroyed() == 3 || this->mEnemies[i].GetAnimating() > 0)
         {
             this->mEnemies[i].Update(delta);
         }
@@ -717,33 +717,36 @@ void GameScene::KeyDown(SDL_KeyboardEvent e)
             break;  
         case SDL_SCANCODE_W:
         case SDL_SCANCODE_UP:
-            this->mControlY += 1;
+            this->AddControlY(1.f);
             this->mControllerX = false;
             this->mControllerY = false;
             break;  
         case SDL_SCANCODE_S:
         case SDL_SCANCODE_DOWN:
-            this->mControlY += -1;
+            this->AddControlY(-1.f);;
             this->mControllerX = false;
             this->mControllerY = false;
             break;
         case SDL_SCANCODE_A:
         case SDL_SCANCODE_LEFT:
-            this->mControlX += -1;
+            this->AddControlX(-1.f);
             this->mControllerX = false;
             this->mControllerY = false;
             break;
         case SDL_SCANCODE_D:
         case SDL_SCANCODE_RIGHT:
-            this->mControlX += 1;
+            this->AddControlX(1.f);
             this->mControllerX = false;
             this->mControllerY = false;
             break;
         case SDL_SCANCODE_SPACE:
-            this->mShooting = true;
-            this->mControllerX = false;
-            this->mControllerY = false;
-            this->mShootingTimer = 100.f;
+            if (this->mShooting == false)
+            {
+                this->mShooting = true;
+                this->mControllerX = false;
+                this->mControllerY = false;
+                this->mShootingTimer = 100.f;
+            }
             break;
         default:
             break;
@@ -760,19 +763,19 @@ void GameScene::KeyUp(SDL_KeyboardEvent e)
             break;  
         case SDL_SCANCODE_W:
         case SDL_SCANCODE_UP:
-            this->mControlY -= 1;
+            this->AddControlY(-1.f);
             break;  
         case SDL_SCANCODE_S:
         case SDL_SCANCODE_DOWN:
-            this->mControlY -= -1;
+            this->AddControlY(1.f);
             break;
         case SDL_SCANCODE_A:
         case SDL_SCANCODE_LEFT:
-            this->mControlX -= -1;
+            this->AddControlX(1.f);
             break;
         case SDL_SCANCODE_D:
         case SDL_SCANCODE_RIGHT:
-            this->mControlX -= 1;
+            this->AddControlX(-1.f);
             break;
         case SDL_SCANCODE_SPACE:
             this->mShooting = false;
@@ -815,12 +818,12 @@ void GameScene::ControllerAxisMove(SDL_ControllerAxisEvent e)
         }
         if (e.value < -DEATH_ZONE) 
         {
-            this->mControlX = ((float)e.value) / 32767;
+            this->AddControlX(((float)e.value) / 32767);
             this->mControllerX = true;
         }
         else if (e.value > DEATH_ZONE)
         {
-            this->mControlX = ((float)e.value) / 32767;
+            this->AddControlX(((float)e.value) / 32767);
             this->mControllerX = true;
         }
     }
@@ -836,12 +839,12 @@ void GameScene::ControllerAxisMove(SDL_ControllerAxisEvent e)
         }
         if (e.value < -DEATH_ZONE)
         {
-            this->mControlY = -((float)e.value) / 32767;
+            this->AddControlY(-((float)e.value) / 32767);
             this->mControllerY = true;
         }
         else if (e.value > DEATH_ZONE)
         {
-            this->mControlY = -((float)e.value) / 32767;
+            this->AddControlY(-((float)e.value) / 32767);
             this->mControllerY = true;
         }
     }
@@ -856,22 +859,22 @@ void GameScene::ControllerButtonDown(SDL_ControllerButtonEvent e)
         case SDL_CONTROLLER_BUTTON_START:
             break;  
         case SDL_CONTROLLER_BUTTON_DPAD_UP:
-            this->mControlY += 1.f;
+            this->AddControlY(1.f);
             this->mControllerX = false;
             this->mControllerY = false;
             break;  
         case SDL_CONTROLLER_BUTTON_DPAD_DOWN:
-            this->mControlY += -1.f;
+            this->AddControlY(-1.f);
             this->mControllerX = false;
             this->mControllerY = false;
             break;
         case SDL_CONTROLLER_BUTTON_DPAD_LEFT:
-            this->mControlX += -1.f;
+            this->AddControlX(-1.f);
             this->mControllerX = false;
             this->mControllerY = false;
             break;
         case SDL_CONTROLLER_BUTTON_DPAD_RIGHT:
-            this->mControlX += 1.f;
+            this->AddControlX(1.f);
             this->mControllerX = false;
             this->mControllerY = false;
             break;
@@ -893,16 +896,16 @@ void GameScene::ControllerButtonUp(SDL_ControllerButtonEvent e)
         case SDL_CONTROLLER_BUTTON_START:
             break;  
         case SDL_CONTROLLER_BUTTON_DPAD_UP:
-            this->mControlY -= 1.f;
+            this->AddControlY(-1.f);
             break;  
         case SDL_CONTROLLER_BUTTON_DPAD_DOWN:
-            this->mControlY -= -1.f;
+            this->AddControlY(1.f);
             break;
         case SDL_CONTROLLER_BUTTON_DPAD_LEFT:
-            this->mControlX -= -1.f;
+            this->AddControlX(1.f);
             break;
         case SDL_CONTROLLER_BUTTON_DPAD_RIGHT:
-            this->mControlX -= 1.f;
+            this->AddControlX(-1.f);
             break;
         case SDL_CONTROLLER_BUTTON_A:
             this->mShooting = false;
@@ -910,4 +913,18 @@ void GameScene::ControllerButtonUp(SDL_ControllerButtonEvent e)
         default:
             break;
     }
+}
+
+void GameScene::AddControlX(float x)
+{
+    this->mControlX += x;
+    if (this->mControlX > 1) this->mControlX = 1;
+    if (this->mControlX < -1) this->mControlX = -1;
+}
+
+void GameScene::AddControlY(float y)
+{
+    this->mControlY += y;
+    if (this->mControlY > 1) this->mControlY = 1;
+    if (this->mControlY < -1) this->mControlY = -1;
 }

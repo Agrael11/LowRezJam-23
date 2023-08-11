@@ -77,4 +77,6 @@ class GameScene
         void ControllerAxisMove(SDL_ControllerAxisEvent e);
         void ControllerButtonDown(SDL_ControllerButtonEvent e);
         void ControllerButtonUp(SDL_ControllerButtonEvent e);
+        void AddControlX(float x);
+        void AddControlY(float y);
 };
