@@ -33,6 +33,7 @@
 
 #include "TextureManager.h"
 #include "SpriteManager.h"
+#include "SoundManager.h"
 #include "Engine/Helper/Format.h"
 #include "Engine/Helper/Logger.h"
 #include "Engine/Math/Rectangle.h"
@@ -83,6 +84,23 @@ void GameScene::LoadContent(Engine::Rendering::Renderer& renderer)
     TextureManager::LoadTexture("Failed", "Assets/Failed.png", renderer);
     TextureManager::LoadTexture("GameOver", "Assets/GameOver.png", renderer);
     TextureManager::LoadTexture("Start", "Assets/Start.png", renderer);
+    SoundManager::LoadSound("BossCone", "Assets/Sounds/BossC.wav");
+    SoundManager::LoadSound("BossCircle", "Assets/Sounds/BossF.wav");
+    SoundManager::LoadSound("BossStraight", "Assets/Sounds/BossS.wav");
+    SoundManager::LoadSound("BossDeath", "Assets/Sounds/BossDeath.wav");
+    SoundManager::LoadSound("EnemyCircle", "Assets/Sounds/EnemyC.wav");
+    SoundManager::LoadSound("EnemyStraight", "Assets/Sounds/EnemyS.wav");
+    SoundManager::LoadSound("EnemyZigzag", "Assets/Sounds/EnemyZ.wav");
+    SoundManager::LoadSound("Hit", "Assets/Sounds/Hit.wav");
+    SoundManager::LoadSound("PlayerShot", "Assets/Sounds/PlayerShot.wav");
+    SoundManager::LoadSound("PlayerDeath", "Assets/Sounds/LifeDown.wav");
+    SoundManager::LoadSound("GameOver", "Assets/Sounds/GameOver.wav");
+    SoundManager::LoadSound("LevelDown", "Assets/Sounds/LevelDown.wav");
+    SoundManager::LoadSound("LevelFail", "Assets/Sounds/LevelFail.wav");
+    SoundManager::LoadSound("LevelFinished", "Assets/Sounds/LevelFinished.wav");
+    SoundManager::LoadMusic("BGM_0", "Assets/Musics/Level0.wav");
+    SoundManager::LoadMusic("BGM_10", "Assets/Musics/Space.wav");
+    SoundManager::LoadMusic("BGM_M", "Assets/Musics/BGMusic.wav");
 
     //LOAD SPRITES
     Sprite bulletSprite0;
@@ -221,7 +239,6 @@ bool GameScene::Update(double delta)
     if (this->mShooting && this->mShootingTimer >= 25.f)
     {
         Shoot();
-        this->mShootingTimer = 0.f;
     }
     this->mShootingTimer += (float)delta/16.f;
 
@@ -284,6 +301,7 @@ bool GameScene::Update(double delta)
                         collisionRectnagle = this->mEnemies[j].GetRectangle();
                         if (collisionRectnagle.Intersects(bulletRectnagle))
                         {
+                            SoundManager::GetSound("Hit").Play(0);
                             //TODO: Do stuff;
                             this->mEnemies[j].Destroy(1);
                             this->mBullets[i].Destroy();
@@ -297,7 +315,7 @@ bool GameScene::Update(double delta)
                 collisionRectnagle = this->CurrentBoss.GetRectangle();
                 if (collisionRectnagle.Intersects(bulletRectnagle))
                 {
-                    //TODO: Do stuff;
+                    SoundManager::GetSound("Hit").Play(0);
                     this->CurrentBoss.SetHealth(this->CurrentBoss.GetHealth()-2);
                     this->mBullets[i].Destroy();
                 }
@@ -354,6 +372,7 @@ bool GameScene::UpdateBossfight(double delta)
     {
         if (this->CurrentBoss.GetHealth() <= 0)
         {
+            SoundManager::GetSound("BossDeath").Play(0);
             this->mCurrentEnemy = 0;
             this->mTargetTimer = levels[this->mCurrentLevel].GetEnemySpawnInfo(this->mCurrentEnemy).GetStartTimer();
             this->mLevelStage = LevelStage::Level;
@@ -411,7 +430,6 @@ bool GameScene::UpdateLevel(double delta)
         { 
             EnemySpawnInfo info = levels[this->mCurrentLevel].GetEnemySpawnInfo(this->mCurrentEnemy);
             this->mEnemies.push_back(Enemy(info));
-            Logger::Log(Logger::Info, string_format("Spawning enemy: %s", info.ToString(false).c_str()));
             this->mCurrentEnemy++;
             if (levels[this->mCurrentLevel].GetEnemySpawnInfos().size() <= this->mCurrentEnemy)
             {
@@ -438,21 +456,26 @@ bool GameScene::UpdateLevel(double delta)
                 this->mScreenToShot = 6;
                 if (this->mCurrentLevel < 10)
                 {
+                    SoundManager::GetSound("LevelFinished").Play(0);
                     this->mNextLevel++;
+                    return true;
                 }
             }
             else
             {
                 this->mScreenToShot = 5;
                 
+                SoundManager::GetSound("LevelDown").Play(0);
                 this->HurtPlayer(50);
                 if (this->mCurrentLevel > 0)
                 {
                     this->mNextLevel--;
+                    return true;
                 }
             }
         }
     }
+
     this->mTimerStatus += delta/16.;
     
     for (int i = (int)this->mEnemies.size()-1; i >= 0; i--)
@@ -472,6 +495,7 @@ bool GameScene::UpdateLevel(double delta)
             Rectangle playerRectangle = this->mPlayer.GetRectangle();
             if (this->mEnemies[i].GetRectangle().Intersects(playerRectangle))
             {
+                SoundManager::GetSound("Hit").Play(0);
                 this->mEnemies[i].Destroy(1);
                 this->HurtPlayer(10);
                 continue;
@@ -479,11 +503,25 @@ bool GameScene::UpdateLevel(double delta)
             
             if (this->mEnemies[i].TimerCheck()) 
             {
-                this->mBullets.push_back(this->mEnemies[i].SpawnBullet());
+                Bullet bullet = this->mEnemies[i].SpawnBullet();
+                switch (bullet.GetBulletType())
+                {
+                    case Bullet::Type::Circling:
+                        SoundManager::GetSound("EnemyCircle").Play(0);
+                        break;
+                    case Bullet::Type::Zigzag:
+                        SoundManager::GetSound("EnemyZigzag").Play(0);
+                        break;
+                    case Bullet::Type::Static:
+                        SoundManager::GetSound("EnemyStraight").Play(0);
+                        break;
+                }
+                this->mBullets.push_back(bullet);
             }
         }
         if (this->mEnemies[i].IsDestroyed() == 2 && !this->failedShown)
         {
+            SoundManager::GetSound("LevelFail").Play(0);
             this->failedShown = true;
             this->mScreenToShot = 1;
             this->mScreenTimer = 0.f;
@@ -663,7 +701,13 @@ void GameScene::DrawUI(double delta, Engine::Rendering::Renderer& renderer)
 void GameScene::Shoot()
 {
     this->mBullets.push_back(this->mPlayer.SpawnBullet());
+    if (this->mStarted == false)
+    {
+        SoundManager::GetMusic("BGM_M").Play(-1);
+    }
     this->mStarted = true;
+    this->mShootingTimer = 0.f;
+    SoundManager::GetSound("PlayerShot").Play(0);
 }
 
 bool GameScene::HealPlayer(float amount)

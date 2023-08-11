@@ -4,6 +4,7 @@
 #include "Engine/Rendering/ImageTexture.h"
 #include "SpriteManager.h"
 #include "TextureManager.h"
+#include "SoundManager.h"
 #include "Engine/Rendering/Sprite.h"
 #include "Engine/Helper/Format.h"
 #include "Engine/Helper/Logger.h"
@@ -169,6 +170,7 @@ std::vector<Bullet> Boss::SpawnBullets()
         BossAttackData currentAttack = this->mAttackDatas[this->mCurrentAttack];
         if(currentAttack.GetAttackType() == BossAttackData::AttackType::Straight && this->mTimer > currentAttack.GetTiming()/currentAttack.GetStrength()*this->mCurrentIterator)
         {
+            SoundManager::GetSound("BossStraight").Play(0);
             this->mCurrentIterator++;
             Vector2f position = Vector2f(this->mPosition.X, this->mPosition.Y);
             position.X += 15;
@@ -177,6 +179,7 @@ std::vector<Bullet> Boss::SpawnBullets()
         }
         else if (currentAttack.GetAttackType() == BossAttackData::AttackType::Circle && this->mTimer > currentAttack.GetTiming()/2.f && this->mCurrentIterator == 0)
         {
+            SoundManager::GetSound("BossCircle").Play(0);
             this->mCurrentIterator++;
             Vector2f position = Vector2f(this->mPosition.X, this->mPosition.Y);
             position.X += 15;
@@ -192,6 +195,7 @@ std::vector<Bullet> Boss::SpawnBullets()
         }
         else if (currentAttack.GetAttackType() == BossAttackData::AttackType::Cone && this->mTimer > currentAttack.GetTiming()/2.f && this->mCurrentIterator == 0)
         {
+            SoundManager::GetSound("BossCone").Play(0);
             this->mCurrentIterator++;
             Vector2f position = Vector2f(this->mPosition.X, this->mPosition.Y);
             position.X += 15;
