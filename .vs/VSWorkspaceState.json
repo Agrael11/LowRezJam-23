@@ -1,0 +1,18 @@
+{
+  "ActiveTargetSystem": "WSL: Ubuntu",
+  "MRUPresetsPerTargetSystem": {
+    "Local Machine": {
+      "configure": "Win64",
+      "build": "Win64-debug"
+    }
+  },
+  "ExpandedNodes": [
+    "",
+    "\\src",
+    "\\src\\Engine",
+    "\\src\\Engine\\Rendering",
+    "\\src\\Engine\\Rendering\\OpenGL_ES"
+  ],
+  "SelectedNode": "\\src\\Engine\\Rendering\\OpenGL_ES\\Renderer_Init.cpp",
+  "PreviewInSolutionExplorer": false
+}
