@@ -216,10 +216,12 @@ bool GameScene::Update(double delta)
 {
     this->mPlayer.Move(Vector2f(this->mControlX * 1.5f * (float)delta /16.f, this->mControlY * 1.5f * (float)delta /16.f));
     this->mPlayer.Update(delta);
-    if (!this->mStarted)
+    
+    if (this->mShooting && this->mShootingTimer >= 25.f)
     {
-        return true;
+        Shoot();
     }
+    this->mShootingTimer += (float)delta/16.f;
 
     if (this->mLevelStage == LevelStage::GameOver || this->mLevelStage == LevelStage::Win)
     {
@@ -239,6 +241,12 @@ bool GameScene::Update(double delta)
             }
         }
     }
+
+    if (!this->mStarted)
+    {
+        return true;
+    }
+
     if (this->mScreenToShot == 1)
     {
         mScreenTimer += delta/16.f;
@@ -253,11 +261,7 @@ bool GameScene::Update(double delta)
         mScreenTimer += delta/16.f;
     }
 
-    if (this->mShooting && this->mShootingTimer >= 25.f)
-    {
-        Shoot();
-    }
-    this->mShootingTimer += (float)delta/16.f;
+
 
     switch (this->mLevelStage)
     {
