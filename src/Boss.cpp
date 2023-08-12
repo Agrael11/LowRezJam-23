@@ -28,7 +28,7 @@ void Boss::Recycle(int bossType)
     this->mTimer = 0;
     this->mMaxTime = 100;
     this->mStage = 0;
-    this->mAttackDatas = BossAttackData::LoadDatasFromFile("Assets/BossAttackPatterns/BossAttackDatas_0.bad");
+    this->mAttackDatas = BossAttackData::LoadDatasFromFile(Engine::Helper::string_format("Assets/BossAttackPatterns/BossAttackDatas_%d.bad",this->mBossType));
     this->mCurrentAttack = 0;
     this->mCurrentIterator = 0;
 }
@@ -176,7 +176,7 @@ std::vector<Bullet> Boss::SpawnBullets(Engine::Math::Vector2f playerPosition)
     if (this->mStage == 1 || this->mStage == 2)
     {
         BossAttackData currentAttack = this->mAttackDatas[this->mCurrentAttack];
-        if(currentAttack.GetAttackType() == BossAttackData::AttackType::Straight && this->mTimer > currentAttack.GetTiming()/currentAttack.GetStrength()*this->mCurrentIterator)
+        if(currentAttack.GetAttackType() == BossAttackData::AttackType::Straight && this->mTimer > currentAttack.GetTiming()/(currentAttack.GetStrength()-1)*this->mCurrentIterator)
         {
             SoundManager::GetSound("BossStraight").Play(0,angle,60, 64);
             this->mCurrentIterator++;
@@ -230,6 +230,23 @@ Rectangle Boss::GetRectangle()
     return Rectangle((int)this->mPosition.X, (int)this->mPosition.Y, BOSS_WIDTH, BOSS_HEIGHT);
 }
 
+int Boss::GetMaxHealth()
+{
+    if (this->mBossType >= 8)
+    {
+        return 300;
+    }
+    else if (this->mBossType >= 5)
+    {
+        return 200;
+    }
+    else if (this->mBossType >= 2)
+    {
+        return 100;
+    }
+    return 50;
+}
+
 int Boss::GetHealth()
 {
     return this->mHealth;
@@ -238,7 +255,7 @@ int Boss::GetHealth()
 void Boss::SetHealth(int health)
 {
     this->mHealth = health;
-    if (this->mHealth > 100) this->mHealth = 100;
+    if (this->mHealth > this->GetMaxHealth()) this->mHealth = this->GetMaxHealth();
     if (this->mHealth < 0) this->mHealth = 0;
 }
 

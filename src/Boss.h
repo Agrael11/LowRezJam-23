@@ -37,6 +37,7 @@ class Boss
         std::vector<Bullet> SpawnBullets(Engine::Math::Vector2f playerPosition);
         Engine::Math::Vector2f GetPosition();
         Engine::Math::Rectangle GetRectangle();
+        int GetMaxHealth();
         int GetHealth();
         void SetHealth(int health);
         int GetType();

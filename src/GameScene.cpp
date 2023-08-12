@@ -103,6 +103,8 @@ void GameScene::LoadContent(Engine::Rendering::Renderer& renderer)
     SoundManager::LoadMusic("BGM_10", "Assets/Musics/Space.ogg");
     SoundManager::LoadMusic("BGM_M", "Assets/Musics/BGMusic.ogg");
 
+    printf("%d", static_cast<int>(BossAttackData::AttackType::Wait));
+
     //LOAD SPRITES
     Sprite bulletSprite0;
     Sprite bulletSprite1;
@@ -184,8 +186,8 @@ void GameScene::Reset()
     
     this->mEnemies.clear();
     this->mBullets.clear();
-    this->mCurrentLevel = 5;
-    this->mNextLevel = 5;
+    this->mCurrentLevel = 0;
+    this->mNextLevel = 0;
     this->mTimerStatus = 0;
     this->mLevelStage = LevelStage::Bossfight;
     this->mVisualProgress = 0;
@@ -407,13 +409,13 @@ bool GameScene::UpdateBossfight(double delta)
                     this->mEnemies.push_back(enemy);
                 }
             }
-            this->HealPlayer(50);
+            this->HealPlayer(this->CurrentBoss.GetMaxHealth()/10.f);
         }
         else
         {
             this->CurrentBoss.Update(delta);
             
-            double perc = this->CurrentBoss.GetHealth() / 100.;
+            double perc = this->CurrentBoss.GetHealth() / (double)this->CurrentBoss.GetMaxHealth();
             if (this->mVisualProgress > perc)
             {
                 this->mVisualProgress -= delta/16./50.;
