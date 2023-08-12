@@ -85,6 +85,7 @@
         "variant": "cpp",
         "*.tcc": "cpp",
         "numeric": "cpp",
-        "sstream": "cpp"
+        "sstream": "cpp",
+        "charconv": "cpp"
     }
 }
