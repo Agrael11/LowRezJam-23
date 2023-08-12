@@ -186,8 +186,8 @@ void GameScene::Reset()
     
     this->mEnemies.clear();
     this->mBullets.clear();
-    this->mCurrentLevel = 0;
-    this->mNextLevel = 0;
+    this->mCurrentLevel = 3;
+    this->mNextLevel = 3;
     this->mTimerStatus = 0;
     this->mLevelStage = LevelStage::Bossfight;
     this->mVisualProgress = 0;
