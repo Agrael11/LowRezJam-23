@@ -22,8 +22,8 @@ void Boss::Recycle(int bossType)
 {
     this->mPosition = Vector2f(16.f, 128.f);
     this->mVelocity = Vector2f(0, 1.f);
-    this->mHealth = 100;
     this->mBossType = bossType;
+    this->mHealth = this->GetMaxHealth();
     this->mDestroyed = 0;
     this->mTimer = 0;
     this->mMaxTime = 100;

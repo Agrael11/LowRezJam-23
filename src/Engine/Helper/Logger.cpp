@@ -5,7 +5,7 @@
 #endif
 
 #include "Logger.h"
-#include "format.h"
+#include "Format.h"
 
 using namespace Engine::Helper;
 

@@ -1,7 +1,7 @@
 #include "RenderTexture.h"
 #include "Renderer.h"
 #include "../../Helper/Logger.h"
-#include "../../Helper/format.h"
+#include "../../Helper/Format.h"
 #include "../../Math/MathHelper.h"
 
 #include "glad/glad.h"

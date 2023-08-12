@@ -1,5 +1,5 @@
 #include "../OpenGL/Renderer.h"
-#include "../../Helper/format.h"
+#include "../../Helper/Format.h"
 #include "../../Helper/Logger.h"
 
 using namespace Engine::Helper;
@@ -11,7 +11,7 @@ bool Renderer::Init(SDL_Window &window, Uint32 flags    )
 {
     this->mWindowReference = &window;
 
-    Logger::Log(Logger::Info, "Creating context.");
+    Logger::Log(Logger::Info, "Creating context."); 
     this->mContext = SDL_GL_CreateContext(&window);
     if (this->mContext == NULL)
     {

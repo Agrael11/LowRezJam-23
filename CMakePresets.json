@@ -3,7 +3,7 @@
     "configurePresets": [
         {
             "name": "Win64",
-            "displayName": "Visual Studio Community 2022 Release - amd64",
+            "displayName": "Visual Studio Community 2022 - amd64",
             "description": "Using compilers for Visual Studio 17 2022 (x64 architecture)",
             "generator": "Visual Studio 17 2022",
             "toolset": "host=x64",
@@ -18,7 +18,7 @@
         },
         {
             "name": "Win86",
-            "displayName": "Visual Studio Community 2022 Release - x86",
+            "displayName": "Visual Studio Community 2022 - x86",
             "description": "Using compilers for Visual Studio 17 2022 (x86 architecture)",
             "generator": "Visual Studio 17 2022",
             "toolset": "host=x86",
@@ -59,25 +59,25 @@
     "buildPresets": [
         {
             "name": "Win64-debug",
-            "displayName": "Visual Studio Community 2022 Release - amd64 - Debug",
+            "displayName": "Visual Studio Community 2022 - amd64 - Debug",
             "configurePreset": "Win64",
             "configuration": "Debug"
         },
         {
             "name": "Win64-release",
-            "displayName": "Visual Studio Community 2022 Release - amd64 - Release",
+            "displayName": "Visual Studio Community 2022 - amd64 - Release",
             "configurePreset": "Win64",
             "configuration": "Release"
         },
         {
             "name": "Win86-debug",
-            "displayName": "Visual Studio Community 2022 Release - x86 - Debug",
+            "displayName": "Visual Studio Community 2022 - x86 - Debug",
             "configurePreset": "Win86",
             "configuration": "Debug"
         },
         {
             "name": "Win86-release",
-            "displayName": "Visual Studio Community 2022 Release - x86 - Release",
+            "displayName": "Visual Studio Community 2022 - x86 - Release",
             "configurePreset": "Win86",
             "configuration": "Release"
         },

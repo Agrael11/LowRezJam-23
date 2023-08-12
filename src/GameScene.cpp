@@ -1,34 +1,3 @@
-/*
-    private:
-        int mCurrentLevel;
-        int mNextLevel;
-        int mLevelStage;
-        int mCurrentEnemy;
-        int mLives;
-
-        double mTimerStatus;
-        double mTargetTimer;
-        double mVisualProgress;
-        
-        bool mFirstPlay;
-
-        Player mPlayer;
-
-        float mScroll;
-        float mScrollSpeed;
-
-        std::vector<Bullet> mBullets;
-        std::vector<Enemy> mEnemies;
-    public:
-        void Init();
-        void LoadContent();
-        void Reset();
-        void Update(double delta);
-        void Draw(double delta);
-        void DrawGame(double delta);
-        void DrawUI(double delta);
-*/
-
 #include "GameScene.h"
 
 #include "TextureManager.h"
@@ -102,8 +71,6 @@ void GameScene::LoadContent(Engine::Rendering::Renderer& renderer)
     SoundManager::LoadMusic("BGM_0", "Assets/Musics/Level0.ogg");
     SoundManager::LoadMusic("BGM_10", "Assets/Musics/Space.ogg");
     SoundManager::LoadMusic("BGM_M", "Assets/Musics/BGMusic.ogg");
-
-    printf("%d", static_cast<int>(BossAttackData::AttackType::Wait));
 
     //LOAD SPRITES
     Sprite bulletSprite0;
@@ -186,8 +153,8 @@ void GameScene::Reset()
     
     this->mEnemies.clear();
     this->mBullets.clear();
-    this->mCurrentLevel = 3;
-    this->mNextLevel = 3;
+    this->mCurrentLevel = 2;
+    this->mNextLevel = 2;
     this->mTimerStatus = 0;
     this->mLevelStage = LevelStage::Bossfight;
     this->mVisualProgress = 0;
