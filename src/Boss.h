@@ -9,7 +9,7 @@
 
 #include <vector>
 
-#define BOSS_WEIGHT 32
+#define BOSS_WIDTH 32
 #define BOSS_HEIGHT 32
 
 class Boss

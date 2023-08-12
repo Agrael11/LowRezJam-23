@@ -13,7 +13,7 @@
 class GameScene
 {
     private:
-        enum class LevelStage {Bossfight, Level, Transition};
+        enum class LevelStage {Bossfight, Level, Transition, GameOver, Win};
     
         int mCurrentLevel;
         int mNextLevel;
@@ -62,6 +62,8 @@ class GameScene
         bool UpdateBossfight(double delta);
         bool UpdateLevel(double delta);
         bool UpdateTransition(double delta);
+        bool UpdateGameOver(double delta);
+        bool UpdateWin(double delta);
         void Draw(double delta, Engine::Rendering::Renderer& renderer);
         void DrawGame(double delta, Engine::Rendering::Renderer& renderer);
         void DrawUI(double delta, Engine::Rendering::Renderer& renderer);

@@ -74,7 +74,7 @@ void GameScene::Init()
 void GameScene::LoadContent(Engine::Rendering::Renderer& renderer)
 {
     //LOAD TEXTURES
-    TextureManager::LoadTexture("BG_1", "Assets/Textures/BG_1.png", renderer);
+    TextureManager::LoadTexture("BG", "Assets/Textures/BG.png", renderer);
     TextureManager::LoadTexture("Bullets", "Assets/Textures/Bullets.png", renderer);
     TextureManager::LoadTexture("Ship", "Assets/Textures/Ship.png", renderer);
     TextureManager::LoadTexture("Enemies", "Assets/Textures/Enemies.png", renderer);
@@ -83,6 +83,7 @@ void GameScene::LoadContent(Engine::Rendering::Renderer& renderer)
     TextureManager::LoadTexture("LevelUp", "Assets/Textures/LevelUp.png", renderer);
     TextureManager::LoadTexture("Failed", "Assets/Textures/Failed.png", renderer);
     TextureManager::LoadTexture("GameOver", "Assets/Textures/GameOver.png", renderer);
+    TextureManager::LoadTexture("Escaped", "Assets/Textures/Escaped.png", renderer);
     TextureManager::LoadTexture("Start", "Assets/Textures/Start.png", renderer);
     SoundManager::LoadSound("BossCone", "Assets/Sounds/BossC.wav");
     SoundManager::LoadSound("BossCircle", "Assets/Sounds/BossF.wav");
@@ -116,13 +117,20 @@ void GameScene::LoadContent(Engine::Rendering::Renderer& renderer)
     Sprite levelUp;
     Sprite failed;
     Sprite gameOver;
+    Sprite win;
     Sprite start;
 
-    for (int i = 0; i < 18; i++)
+    for (int i = 0; i < 33; i++)
     {
         Sprite bgSprite;
-        bgSprite.Load(TextureManager::GetTexture("BG_1"), Rectangle((i%8)*8,(i/8)*8,8,8), renderer);
+        bgSprite.Load(TextureManager::GetTexture("BG"), Rectangle((i%3)*8,(i/3)*8,8,8), renderer);
         SpriteManager::AddSprite(string_format("BG_%d", i), bgSprite);
+    }
+    for (int i = 0; i < 10; i++)
+    {
+        Sprite bossSprite;
+        bossSprite.Load(TextureManager::GetTexture("Bosses"), Rectangle((i%5)*BOSS_WIDTH,(i/5)*BOSS_HEIGHT,BOSS_WIDTH, BOSS_HEIGHT), renderer);
+        SpriteManager::AddSprite(string_format("Boss_%d", i), bossSprite);
     }
 
     bulletSprite0.Load(TextureManager::GetTexture("Bullets"), Rectangle(0, 0, BULLET_WIDTH, BULLET_HEIGHT), renderer);
@@ -134,10 +142,10 @@ void GameScene::LoadContent(Engine::Rendering::Renderer& renderer)
     enemyZigzag.Load(TextureManager::GetTexture("Enemies"), Rectangle(ENEMY_WIDTH, 0, ENEMY_WIDTH, ENEMY_HEIGHT), renderer);
     enemyCircle.Load(TextureManager::GetTexture("Enemies"), Rectangle(2*ENEMY_WIDTH, 0, ENEMY_WIDTH, ENEMY_HEIGHT), renderer);
     life.Load(TextureManager::GetTexture("Life"), Rectangle(0, 0, 4, 4), renderer);
-    boss.Load(TextureManager::GetTexture("Bosses"), Rectangle(0, 0, BOSS_WEIGHT, BOSS_HEIGHT), renderer);
     levelUp.Load(TextureManager::GetTexture("LevelUp"), Rectangle(0, 0, 64, 64), renderer);
     failed.Load(TextureManager::GetTexture("Failed"), Rectangle(0, 0, 64, 64), renderer);
     gameOver.Load(TextureManager::GetTexture("GameOver"), Rectangle(0, 0, 64, 64), renderer);
+    win.Load(TextureManager::GetTexture("Escaped"), renderer);
     start.Load(TextureManager::GetTexture("Start"), renderer);
 
     SpriteManager::AddSprite("Bullets_0", bulletSprite0);
@@ -148,10 +156,10 @@ void GameScene::LoadContent(Engine::Rendering::Renderer& renderer)
     SpriteManager::AddSprite("Enemy_Zigzag", enemyZigzag);
     SpriteManager::AddSprite("Enemy_Circle", enemyCircle);
     SpriteManager::AddSprite("Life", life);
-    SpriteManager::AddSprite("Boss_0", boss);
     SpriteManager::AddSprite("Level_Up", levelUp);
     SpriteManager::AddSprite("Failed", failed);
     SpriteManager::AddSprite("Game_Over", gameOver);
+    SpriteManager::AddSprite("Win", win);
     SpriteManager::AddSprite("Start", start);
     SpriteManager::AddSprite("Transition", transition);
 
@@ -159,11 +167,6 @@ void GameScene::LoadContent(Engine::Rendering::Renderer& renderer)
     {
         LoadLevelFromFile(string_format("Assets/Levels/Level%d.lvl",i).c_str());
     }
-
-    //TODO: DEBUG DATA
-    Logger::Log(Logger::Fatal, "Beta version, not complete yet!");
-    Logger::Log(Logger::Fatal, "Test Version 8!");
-    Logger::Log(Logger::Fatal, "Some ingame informations are shown as FATAL ERRORS currently, not on screen!");
 }
 
 int GameScene::GenerateBgPart()
@@ -179,7 +182,9 @@ void GameScene::Reset()
     this->mScroll = 0.f;
     this->mScrollSpeed = 6.f;
     
-    this->mCurrentLevel = 5; //TODO: Start with correct level
+    this->mEnemies.clear();
+    this->mBullets.clear();
+    this->mCurrentLevel = 5;
     this->mNextLevel = 5;
     this->mTimerStatus = 0;
     this->mLevelStage = LevelStage::Bossfight;
@@ -209,6 +214,19 @@ void GameScene::Reset()
 
 bool GameScene::Update(double delta)
 {
+    this->mPlayer.Move(Vector2f(this->mControlX * 1.5f * (float)delta /16.f, this->mControlY * 1.5f * (float)delta /16.f));
+    this->mPlayer.Update(delta);
+    if (!this->mStarted)
+    {
+        return true;
+    }
+
+    if (this->mLevelStage == LevelStage::GameOver || this->mLevelStage == LevelStage::Win)
+    {
+        this->mScreenTimer += delta / 16.;
+        if (this->mScreenTimer > 600) this->Reset();
+        return true;
+    }
     if (this->mScreenToShot == 0)
     {
         if (this->mStarted == true)
@@ -240,16 +258,6 @@ bool GameScene::Update(double delta)
         Shoot();
     }
     this->mShootingTimer += (float)delta/16.f;
-
-    this->mPlayer.Move(Vector2f(this->mControlX * 1.5f * (float)delta /16.f, this->mControlY * 1.5f * (float)delta /16.f));
-    this->mPlayer.Update(delta);
-
-
-    if (!this->mStarted)
-    {
-        return true;
-    }
-
 
     switch (this->mLevelStage)
     {
@@ -301,7 +309,6 @@ bool GameScene::Update(double delta)
                         if (collisionRectnagle.Intersects(bulletRectnagle))
                         {
                             SoundManager::GetSound("Hit").Play(0,50);
-                            //TODO: Do stuff;
                             this->mEnemies[j].Destroy(1);
                             this->mBullets[i].Destroy();
                             break;
@@ -356,15 +363,13 @@ bool GameScene::Update(double delta)
 
 bool GameScene::UpdateBossfight(double delta)
 {
-    if (this->mFirstPlay)
+    if (this->mFirstPlay || this->mCurrentLevel == 0)
     {
-        Logger::Log(Logger::Fatal, "Skipping stage 0 on start.");
         this->mCurrentEnemy = 0;
         this->mTargetTimer = levels[this->mCurrentLevel].GetEnemySpawnInfo(this->mCurrentEnemy).GetStartTimer();
         this->mLevelStage = LevelStage::Level;
         this->mTimerStatus = 0;
         this->mFirstPlay = false;
-        Logger::Log(Logger::Fatal, "Moving to Stage 1 - Level.");
     }
     else
     {
@@ -380,7 +385,7 @@ bool GameScene::UpdateBossfight(double delta)
             this->mLevelStage = LevelStage::Level;
             this->mTimerStatus = 0;
             Vector2f startPosition(this->CurrentBoss.GetPosition());
-            startPosition.X += BOSS_WEIGHT / 2 + ENEMY_WIDTH / 2;
+            startPosition.X += BOSS_WIDTH / 2 + ENEMY_WIDTH / 2;
             startPosition.Y += BOSS_HEIGHT / 2 + ENEMY_WIDTH / 2;
             for (float i = 0; i < 1.f; i+=0.1f)
             {
@@ -388,8 +393,8 @@ bool GameScene::UpdateBossfight(double delta)
                 {
                     float x = cos(j+(i*MathHelper::TAUf));
                     float y = -sin(j+(i*MathHelper::TAUf));
-                    float xi = ((BOSS_WEIGHT / 2 * i) - BOSS_WEIGHT/2) * x;
-                    float yi = ((BOSS_HEIGHT / 2 * i)- BOSS_WEIGHT/2) * y;
+                    float xi = ((BOSS_WIDTH / 2 * i) - BOSS_WIDTH/2) * x;
+                    float yi = ((BOSS_HEIGHT / 2 * i)- BOSS_WIDTH/2) * y;
                     Vector2f newSpawnPosition(startPosition.X + xi,startPosition.Y + yi);
                     int type = rand()%3;
                     float speed = ((1+(1-i))*2.f);
@@ -398,7 +403,6 @@ bool GameScene::UpdateBossfight(double delta)
                     this->mEnemies.push_back(enemy);
                 }
             }
-            Logger::Log(Logger::Fatal, "Moving to Stage 1 - Level.");
             this->HealPlayer(50);
         }
         else
@@ -469,12 +473,20 @@ bool GameScene::UpdateLevel(double delta)
                     {
                         SoundManager::GetMusic("BGM_M").Play(-1, true, 0);
                     }
-                    if (this->mCurrentLevel == 9)
+                    else if (this->mCurrentLevel == 9)
                     {
                         SoundManager::GetMusic("BGM_10").Play(-1, true, 0);
                     }
                     SoundManager::GetSound("LevelFinished").Play(0,128);
-                    this->mNextLevel++;
+                    this->mNextLevel = this->mCurrentLevel + 1;
+                    return true;
+                }
+                else
+                {
+                    SoundManager::GetMusic("BGM_10").Stop(0);
+                    SoundManager::GetSound("LevelFinished").Play(0,128);
+                    this->mScreenTimer=0;
+                    this->mLevelStage = LevelStage::Win;
                     return true;
                 }
             }
@@ -490,11 +502,14 @@ bool GameScene::UpdateLevel(double delta)
                     SoundManager::GetMusic("BGM_M").Play(-1, true, 3000);
                 }
                 SoundManager::GetSound("LevelDown").Play(0,64);
-                this->HurtPlayer(50);
                 if (this->mCurrentLevel > 0)
                 {
                     this->mNextLevel--;
                     return true;
+                }
+                else
+                {
+                    this->HurtPlayer(50);
                 }
             }
         }
@@ -668,6 +683,24 @@ void GameScene::DrawUI(double delta, Engine::Rendering::Renderer& renderer)
         destination.Height = 4;
         renderer.DrawSprite(SpriteManager::GetSprite("Life"), destination);
     }
+    
+    if (this->mLevelStage == LevelStage::Win || this->mLevelStage == LevelStage::GameOver)
+    {
+        destination.X = 0;
+        destination.Y = 0;
+        destination.Width = 64;
+        destination.Height = 64;
+        float a = 1.f;
+        if (this->mScreenTimer < 60)
+        {
+            a = (float)this->mScreenTimer/60.f;
+        }
+        Sprite image = SpriteManager::GetSprite((this->mLevelStage == LevelStage::Win)?"Win":"Game_Over");
+        Colorf tempColor(1.f,1.f,1.f,a);
+        image.SetColorMod(tempColor);
+        renderer.DrawSprite(image, destination);
+        return;
+    }
 
     if (this->mScreenToShot == 0)
     {
@@ -770,14 +803,15 @@ bool GameScene::HurtPlayer(float amount)
     {
         SoundManager::GetSound("PlayerDeath").Play(0,64);
         hp += 100.f;
-        Logger::Log(Logger::Fatal, "YOU DIED");
         this->mLives--;
         if (this->mLives < 0)
         {
-            hp = 100.f;
-            this->mLives=3;
-            Logger::Log(Logger::Fatal, "Lies don't really work now. RESET TO 3");
-            //TODO: Do Game Over
+            this->mLevelStage = LevelStage::GameOver;
+            if (this->mCurrentLevel == 0 )SoundManager::GetMusic("BGM_0").Stop(0);
+            else if (this->mCurrentLevel < 10 )SoundManager::GetMusic("BGM_M").Stop(0);
+            else if (this->mCurrentLevel == 10 )SoundManager::GetMusic("BGM_10").Stop(0);
+            SoundManager::GetSound("GameOver").Play(0,128);
+            this->mScreenTimer=0;
         }
         this->mPlayer.SetHealth(hp);
         return true;

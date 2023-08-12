@@ -37,7 +37,7 @@ void Boss::Draw(Engine::Rendering::Renderer &renderer)
 {
     if (this->mDestroyed == 0)
     {
-        Rectangle dest = Rectangle((int)this->mPosition.X, (int)this->mPosition.Y, BOSS_WEIGHT, BOSS_HEIGHT);
+        Rectangle dest = Rectangle((int)this->mPosition.X, (int)this->mPosition.Y, BOSS_WIDTH, BOSS_HEIGHT);
         renderer.DrawSprite(SpriteManager::GetSprite(Engine::Helper::string_format("Boss_%d",mBossType)) , dest);
     }
 }
@@ -46,6 +46,10 @@ void Boss::Update(double deltaTime)
 {
     if (this->mDestroyed == 0)
     {
+        if (this->mPosition.X < -BOSS_WIDTH) this->mPosition.X = -BOSS_WIDTH;
+        if (this->mPosition.X > 64+BOSS_WIDTH) this->mPosition.X = 64+BOSS_WIDTH;
+        if (this->mPosition.Y < -BOSS_HEIGHT) this->mPosition.Y = -BOSS_HEIGHT;
+        if (this->mPosition.Y > 64+BOSS_HEIGHT) this->mPosition.Y = 64+BOSS_HEIGHT;
         switch (this->mStage)
         {
             case 0:
@@ -179,7 +183,6 @@ std::vector<Bullet> Boss::SpawnBullets(Engine::Math::Vector2f playerPosition)
             Vector2f position = Vector2f(this->mPosition.X, this->mPosition.Y);
             position.X += 15;
             bullets.push_back(Bullet(position, Vector2f(0,-1), false, currentAttack.GetBulletType()));
-            Engine::Helper::Logger::Log(Engine::Helper::Logger::Info, Engine::Helper::string_format("Now attacking in pattern: %s", this->mAttackDatas[this->mCurrentAttack].ToString(false).c_str()));
         }
         else if (currentAttack.GetAttackType() == BossAttackData::AttackType::Circle && this->mTimer > currentAttack.GetTiming()/2.f && this->mCurrentIterator == 0)
         {
@@ -195,7 +198,6 @@ std::vector<Bullet> Boss::SpawnBullets(Engine::Math::Vector2f playerPosition)
                 bullets.push_back(Bullet(position, Vector2f(x, y), false, currentAttack.GetBulletType()));
             }
             bullets.push_back(Bullet(position, Vector2f(0,-1), false, currentAttack.GetBulletType()));
-            Engine::Helper::Logger::Log(Engine::Helper::Logger::Info, Engine::Helper::string_format("Now attacking in pattern: %s", this->mAttackDatas[this->mCurrentAttack].ToString(false).c_str()));
         }
         else if (currentAttack.GetAttackType() == BossAttackData::AttackType::Cone && this->mTimer > currentAttack.GetTiming()/2.f && this->mCurrentIterator == 0)
         {
@@ -207,7 +209,6 @@ std::vector<Bullet> Boss::SpawnBullets(Engine::Math::Vector2f playerPosition)
             {
                 bullets.push_back(Bullet(position, Vector2f(i/30.f,-0.5f), false, currentAttack.GetBulletType()));
             }
-            Engine::Helper::Logger::Log(Engine::Helper::Logger::Info, Engine::Helper::string_format("Now attacking in pattern: %s", this->mAttackDatas[this->mCurrentAttack].ToString(false).c_str()));
         }
         
         if(this->mTimer > this->mAttackDatas[this->mCurrentAttack].GetTiming())
@@ -220,17 +221,13 @@ std::vector<Bullet> Boss::SpawnBullets(Engine::Math::Vector2f playerPosition)
                 this->mCurrentAttack = 0;
             }
         }
-        /*else
-        {
-            Engine::Helper::Logger::Log(Engine::Helper::Logger::Info, Engine::Helper::string_format("Wating: %0.4f/%0.4f", this->mTimer, this->mAttackDatas[this->mCurrentAttack].GetTiming()));
-        }*/
     }
     return bullets;
 }
 
 Rectangle Boss::GetRectangle()
 {
-    return Rectangle((int)this->mPosition.X, (int)this->mPosition.Y, BOSS_WEIGHT, BOSS_HEIGHT);
+    return Rectangle((int)this->mPosition.X, (int)this->mPosition.Y, BOSS_WIDTH, BOSS_HEIGHT);
 }
 
 int Boss::GetHealth()
