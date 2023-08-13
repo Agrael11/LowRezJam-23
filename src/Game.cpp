@@ -13,6 +13,10 @@
 #include "Engine/Math/Color.h"
 #include "Engine/Math/Colorf.h"
 
+#if EMSCRIPTEN
+#include "emscripten.h"
+#endif
+
 using namespace Engine::Helper;
 using namespace Engine::Math;
 using namespace Engine::Audio;
@@ -32,7 +36,7 @@ void Game::Init()
     }
     SDL_SetRelativeMouseMode(SDL_TRUE);
     
-    //Logger::MinimumPrintLevel = Logger::Error;
+    Logger::MinimumPrintLevel = Logger::Error;
     
     this->mGameScene.Init();
 }
@@ -51,12 +55,32 @@ void Game::LoadContent()
     this->mGameScene.LoadContent(this->renderer);
 }
 
+#if EMSCRIPTEN
+EM_JS(int, canvas_get_width, (), {
+    return window.innerWidth;
+});
+
+EM_JS(int, canvas_get_height, (), {
+    return window.innerHeight;
+});
+#endif
+
 bool Game::Update(double delta)
 {
     if (!this->mRunning)
     {
         return false;
     }
+
+    #if EMSCRIPTEN
+        int width = canvas_get_width();
+        int height = canvas_get_height();
+        if (width != this->windowWidth || height != this->windowHeight)
+        {
+            this->SetWindowSize(width, height);
+            this->renderer.SetViewport(0, 0, width, height);
+        }
+    #endif
 
     if (!this->mGameScene.Update(delta))
     {
@@ -79,7 +103,21 @@ void Game::Draw(double delta)
     this->renderer.Begin();
     this->renderer.SetActiveShader(&this->mShader);
     this->renderer.Clean(this->mColorDarkGray);
-    Rectangle destination(0,0,512,512);
+    int xOff = 0;
+    int yOff = 0;
+    int width = this->windowWidth;
+    if (width > this->windowHeight)
+    {
+        width = this->windowHeight;
+        xOff = (this->windowWidth - this->windowHeight) / 2;
+    }
+    int height = this->windowHeight;
+    if (height > this->windowWidth)
+    {
+        height = this->windowWidth;
+        yOff = (this->windowHeight - this->windowWidth) / 2;
+    }
+    Rectangle destination(xOff, yOff, width, height);
     this->renderer.DrawSprite(this->mainRenderTargetSprite, destination);
     this->renderer.End();
 }
@@ -138,6 +176,19 @@ void Game::HandleEvent(SDL_Event e)
         if (Engine::Support::controller)
         {
             this->ControllerButtonUp(e.cbutton);
+        }
+    }
+    else if (e.type == SDL_WINDOWEVENT)
+    {
+        if (e.window.event == SDL_WINDOWEVENT_RESIZED)
+        {
+            int width = e.window.data1;
+            int height = e.window.data2;
+            if (width < 64) width = 64;
+            if (height < 64) height = 64;
+            this->windowWidth = width;
+            this->windowHeight = height;
+            this->renderer.SetViewport(0, 0, this->windowWidth, this->windowHeight);
         }
     }
 }

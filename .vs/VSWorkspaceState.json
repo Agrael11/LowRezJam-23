@@ -1,9 +1,13 @@
 {
-  "ActiveTargetSystem": "WSL: Ubuntu",
+  "ActiveTargetSystem": "Local Machine",
   "MRUPresetsPerTargetSystem": {
     "Local Machine": {
       "configure": "Win64",
       "build": "Win64-debug"
+    },
+    "WSL: Ubuntu": {
+      "configure": "Emscripten",
+      "build": "Emscripten-debug"
     }
   },
   "ExpandedNodes": [
@@ -13,6 +17,6 @@
     "\\src\\Engine\\Rendering",
     "\\src\\Engine\\Rendering\\OpenGL_ES"
   ],
-  "SelectedNode": "\\src\\Engine\\Rendering\\OpenGL_ES\\Renderer_Init.cpp",
+  "SelectedNode": "\\CMakeLists.txt",
   "PreviewInSolutionExplorer": false
 }

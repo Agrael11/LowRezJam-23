@@ -360,9 +360,9 @@ bool GameScene::UpdateBossfight(double delta)
             Vector2f startPosition(this->CurrentBoss.GetPosition());
             startPosition.X += BOSS_WIDTH / 2 + ENEMY_WIDTH / 2;
             startPosition.Y += BOSS_HEIGHT / 2 + ENEMY_WIDTH / 2;
-            for (float i = 0; i < 1.f; i+=0.1f)
+            for (float i = 0; i < 1.f; i+=0.2f)
             {
-                for (float j = 0; j < MathHelper::TAUf; j+=MathHelper::TAUf/40.f)
+                for (float j = 0; j < MathHelper::TAUf; j+=MathHelper::TAUf/20.f)
                 {
                     float x = cos(j+(i*MathHelper::TAUf));
                     float y = -sin(j+(i*MathHelper::TAUf));
