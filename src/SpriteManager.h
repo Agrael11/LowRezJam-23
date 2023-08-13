@@ -1,8 +1,6 @@
 #pragma once
 
 #include "Engine/Rendering/Sprite.h"
-#include <unordered_map>
-#include <optional>
 
 class SpriteManager
 {

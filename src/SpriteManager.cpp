@@ -1,6 +1,7 @@
 #include "SpriteManager.h"
 #include "Engine/Helper/Format.h"
 #include "Engine/Helper/Logger.h"
+#include <unordered_map>
 
 using namespace std;
 using namespace Engine::Rendering;

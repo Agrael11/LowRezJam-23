@@ -34,7 +34,6 @@ void Game::Init()
     {
         InitAudio(44100, MIX_DEFAULT_FORMAT, 2, 2048);
     }
-    SDL_SetRelativeMouseMode(SDL_TRUE);
     
     Logger::MinimumPrintLevel = Logger::Error;
     
@@ -62,6 +61,10 @@ EM_JS(int, canvas_get_width, (), {
 
 EM_JS(int, canvas_get_height, (), {
     return window.innerHeight;
+});
+
+EM_JS(void, focusWindow, (), {
+    window.focus();
 });
 #endif
 
@@ -147,6 +150,9 @@ void Game::HandleEvent(SDL_Event e)
     }
     else if (e.type == SDL_MOUSEBUTTONDOWN)
     {
+        #if EMSCRIPTEN
+        focusWindow();
+        #endif
         this->MouseButtonDown(e.button);
     }
     else if (e.type == SDL_MOUSEBUTTONUP)
@@ -198,9 +204,6 @@ void Game::KeyDown(SDL_KeyboardEvent e)
 {
     switch (e.keysym.scancode)
     {
-        case SDL_SCANCODE_ESCAPE:
-            this->mRunning = false;
-            break;
         case SDL_SCANCODE_F4:
             this->mPressedF4 = true;
             break;

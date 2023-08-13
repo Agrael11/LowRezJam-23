@@ -36,6 +36,7 @@ class GameScene
         float mControlY;
         bool mControllerY;
         bool failedShown;
+        bool mPaused;
 
         bool mFirstPlay;
 
@@ -54,6 +55,7 @@ class GameScene
     public:
         GameScene();
 
+        bool SwitchPaused(bool focus);
         void Init();
         void LoadContent(Engine::Rendering::Renderer& renderer);
         int GenerateBgPart();

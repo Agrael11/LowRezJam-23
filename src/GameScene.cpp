@@ -54,6 +54,8 @@ void GameScene::LoadContent(Engine::Rendering::Renderer& renderer)
     TextureManager::LoadTexture("GameOver", "Assets/Textures/GameOver.png", renderer);
     TextureManager::LoadTexture("Escaped", "Assets/Textures/Escaped.png", renderer);
     TextureManager::LoadTexture("Start", "Assets/Textures/Start.png", renderer);
+    TextureManager::LoadTexture("Paused", "Assets/Textures/Paused.png", renderer);
+
     SoundManager::LoadSound("BossCone", "Assets/Sounds/BossC.wav");
     SoundManager::LoadSound("BossCircle", "Assets/Sounds/BossF.wav");
     SoundManager::LoadSound("BossStraight", "Assets/Sounds/BossS.wav");
@@ -101,6 +103,12 @@ void GameScene::LoadContent(Engine::Rendering::Renderer& renderer)
         bossSprite.Load(TextureManager::GetTexture("Bosses"), Rectangle((i%5)*BOSS_WIDTH,(i/5)*BOSS_HEIGHT,BOSS_WIDTH, BOSS_HEIGHT), renderer);
         SpriteManager::AddSprite(string_format("Boss_%d", i), bossSprite);
     }
+    for (int i = 0; i < 11; i++)
+    {
+        Sprite pausedSprite;
+        pausedSprite.Load(TextureManager::GetTexture("Paused"), Rectangle((i%5)*64,(i/5)*64,64, 64), renderer);
+        SpriteManager::AddSprite(string_format("Paused_%d", i), pausedSprite);
+    }
 
     bulletSprite0.Load(TextureManager::GetTexture("Bullets"), Rectangle(0, 0, BULLET_WIDTH, BULLET_HEIGHT), renderer);
     bulletSprite1.Load(TextureManager::GetTexture("Bullets"), Rectangle(BULLET_WIDTH, 0, BULLET_WIDTH, BULLET_HEIGHT), renderer);
@@ -136,6 +144,13 @@ void GameScene::LoadContent(Engine::Rendering::Renderer& renderer)
     {
         LoadLevelFromFile(string_format("Assets/Levels/Level%d.lvl",i).c_str());
     }
+}
+
+bool GameScene::SwitchPaused(bool focus)
+{
+    this->mPaused = focus;
+    SDL_SetRelativeMouseMode(!this->mPaused ? SDL_TRUE : SDL_FALSE);
+    return focus;
 }
 
 int GameScene::GenerateBgPart()
@@ -179,6 +194,7 @@ void GameScene::Reset()
     this->mControllerX = false;
     this->mControllerY = false;
     this->failedShown = false;
+    this->mPaused = true;
 }
 
 bool GameScene::Update(double delta)
@@ -211,7 +227,7 @@ bool GameScene::Update(double delta)
         }
     }
 
-    if (!this->mStarted)
+    if (!this->mStarted || this->mPaused)
     {
         return true;
     }
@@ -468,11 +484,11 @@ bool GameScene::UpdateLevel(double delta)
                 this->mScreenToShot = 5;
                 if (this->mCurrentLevel == 1)
                 {
-                    SoundManager::GetMusic("BGM_0").Play(-1, true, 3000);
+                    SoundManager::GetMusic("BGM_0").Play(-1, true, 0);
                 }
                 if (this->mCurrentLevel == 10)
                 {
-                    SoundManager::GetMusic("BGM_M").Play(-1, true, 3000);
+                    SoundManager::GetMusic("BGM_M").Play(-1, true, 0);
                 }
                 SoundManager::GetSound("LevelDown").Play(0,64);
                 if (this->mCurrentLevel > 0)
@@ -596,7 +612,7 @@ void GameScene::DrawGame(double delta, Engine::Rendering::Renderer& renderer)
     {
         for (int y = 0; y < 9; y++)
         {
-            int tile = levels[this->mCurrentLevel].GetBackground()*3 + this->mBgTiles[(8-y)*8+x];
+            int tile = levels[this->mCurrentLevel].GetBackground() * 3 + this->mBgTiles[(8 - static_cast<std::vector<int, std::allocator<int>>::size_type>(y)) * 8 + x];
             destination.X = x*8;
             destination.Y = 64-y*8-(int)this->mScroll;
             renderer.DrawSprite(SpriteManager::GetSprite(string_format("BG_%d",tile).c_str()), destination);
@@ -684,7 +700,7 @@ void GameScene::DrawUI(double delta, Engine::Rendering::Renderer& renderer)
         Sprite image = SpriteManager::GetSprite("Start");
         Colorf tempColor(1.f,1.f,1.f,1.f-(float)(this->mScreenTimer)/10.f);
         image.SetColorMod(tempColor);
-        renderer.DrawSprite(image, destination);;
+        renderer.DrawSprite(image, destination);
     }
     else if (this->mScreenToShot == 1)
     {
@@ -695,7 +711,7 @@ void GameScene::DrawUI(double delta, Engine::Rendering::Renderer& renderer)
         Sprite image = SpriteManager::GetSprite("Failed");
         Colorf tempColor(1.f,1.f,1.f,1.f-(float)(this->mScreenTimer)/90.f);
         image.SetColorMod(tempColor);
-        renderer.DrawSprite(image, destination);;
+        renderer.DrawSprite(image, destination);
     }
     else if (this->mScreenToShot == 5)
     {
@@ -708,7 +724,7 @@ void GameScene::DrawUI(double delta, Engine::Rendering::Renderer& renderer)
         if (timer > 1.f) timer = 2.f - timer;
         Colorf tempColor(2.f,2.f,2.f,timer);
         image.SetColorMod(tempColor);
-        renderer.DrawSprite(image, destination);;
+        renderer.DrawSprite(image, destination);
         image = SpriteManager::GetSprite("Failed");
         tempColor = Colorf(1.f,1.f,1.f,timer);
         image.SetColorMod(tempColor);
@@ -725,10 +741,20 @@ void GameScene::DrawUI(double delta, Engine::Rendering::Renderer& renderer)
         if (timer > 1.f) timer = 2.f - timer;
         Colorf tempColor(2.f,2.f,2.f,timer);
         image.SetColorMod(tempColor);
-        renderer.DrawSprite(image, destination);;
+        renderer.DrawSprite(image, destination);
         image = SpriteManager::GetSprite("Level_Up");
         tempColor = Colorf(1.f,1.f,1.f,timer);
         image.SetColorMod(tempColor);
+        renderer.DrawSprite(image, destination);
+    }
+
+    if (this->mStarted && this->mPaused)
+    {
+        destination.X = 0;
+        destination.Y = 0;
+        destination.Width = 64;
+        destination.Height = 64;
+        Sprite image = SpriteManager::GetSprite(string_format("Paused_%d",this->mCurrentLevel));
         renderer.DrawSprite(image, destination);
     }
 }
@@ -799,9 +825,13 @@ void GameScene::KeyDown(SDL_KeyboardEvent e)
 {
     switch (e.keysym.scancode)
     {
+        case SDL_SCANCODE_P:
         case SDL_SCANCODE_ESCAPE:
+            printf("P Pressed");
+            this->SwitchPaused(true);
             break;
         case SDL_SCANCODE_RETURN:
+            this->SwitchPaused(false);
             break;  
         case SDL_SCANCODE_W:
         case SDL_SCANCODE_UP:
@@ -835,6 +865,7 @@ void GameScene::KeyDown(SDL_KeyboardEvent e)
                 this->mControllerY = false;
                 this->mShootingTimer = 100.f;
             }
+            this->SwitchPaused(false);
             break;
         default:
             break;
@@ -875,15 +906,24 @@ void GameScene::KeyUp(SDL_KeyboardEvent e)
 
 void GameScene::MouseMove(SDL_MouseMotionEvent e)
 {
-    this->mPlayer.Move(Vector2f(e.xrel*0.1f, -e.yrel*0.1f));
+    if (!this->mPaused)
+    {
+        this->mPlayer.Move(Vector2f(e.xrel * 0.1f, -e.yrel * 0.1f));
+    }
 }
 
 void GameScene::MouseButtonDown(SDL_MouseButtonEvent e)
 {
     if (e.button == SDL_BUTTON_LEFT)
     {
-        this->mShooting = true;
-        this->mShootingTimer = 100.f;
+        if (this->mShooting == false)
+        {
+            this->mShooting = true;
+            this->mControllerX = false;
+            this->mControllerY = false;
+            this->mShootingTimer = 100.f;
+        }
+        this->SwitchPaused(false);
     }
 }
 
@@ -943,8 +983,10 @@ void GameScene::ControllerButtonDown(SDL_ControllerButtonEvent e)
     switch (e.button)
     {
         case SDL_CONTROLLER_BUTTON_BACK:
+            this->SwitchPaused(true);
             break;
         case SDL_CONTROLLER_BUTTON_START:
+            this->SwitchPaused(false);
             break;  
         case SDL_CONTROLLER_BUTTON_DPAD_UP:
             this->AddControlY(1.f);
@@ -968,6 +1010,7 @@ void GameScene::ControllerButtonDown(SDL_ControllerButtonEvent e)
             break;
         case SDL_CONTROLLER_BUTTON_A:
             this->mShooting = true;
+            this->SwitchPaused(false);
             this->mShootingTimer = 100.f;
             break;
         default:

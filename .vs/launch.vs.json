@@ -1,0 +1,12 @@
+{
+  "version": "0.2.1",
+  "defaults": {},
+  "configurations": [
+    {
+      "type": "default",
+      "project": "CMakeLists.txt",
+      "projectTarget": "LRJ23_Space_Shooter.exe (Debug\\LRJ23_Space_Shooter.exe)",
+      "name": "LRJ23_Space_Shooter.exe (Debug\\LRJ23_Space_Shooter.exe)"
+    }
+  ]
+}
